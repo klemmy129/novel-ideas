@@ -1,0 +1,16 @@
+spring:
+  jpa:
+    database: h2
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:format_sql: true
+      dialect: org.hibernate.dialect.H2Dialect
+  datasource:
+#    url: jdbc:h2:./h2DB:default:PUBLIC;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE
+#    username: sa
+#    password:
+    driverClassName: org.h2.Driver
+  flyway:
+    enabled: false
+

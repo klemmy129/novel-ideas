@@ -1,0 +1,19 @@
+spring:
+  jpa:
+    database: postgresql
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:format_sql: true
+      dialect: org.hibernate.dialect.PostgreSQL95Dialect
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/postgres}
+    username: ${DB_USERNAME:novel}
+    password: ${DB_PASSWORD:novel1}
+    driver-class-name: org.postgresql.Driver
+  flyway:
+    user: ${DB_USERNAME:novel}
+    password: ${DB_PASSWORD:novel1}
+    locations: "classpath:db/migration/{vendor}"
+    enabled: true
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/postgres}

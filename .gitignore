@@ -10,6 +10,25 @@
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
 
+# Intellij
+.idea/*
+*.iml
+./target/*
+
+# VS Code
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/*.code-snippets
+
+# Local History for Visual Studio Code
+.history/
+
+# Built Visual Studio Code Extensions
+*.vsix
+
 # Package Files #
 *.jar
 *.war
