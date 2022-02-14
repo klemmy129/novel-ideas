@@ -7,12 +7,12 @@ import com.klemmy.novelideas.error.FindDataException;
 import com.klemmy.novelideas.jpa.CharacterProfile;
 import com.klemmy.novelideas.jpa.repository.CharacterProfileRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -20,11 +20,12 @@ public class CharacterProfileService {
 
   private final CharacterProfileRepository characterProfileRepository;
 
-  public List<CharacterProfileDto> loadAll() {
-    return characterProfileRepository.findAll()
-        .stream()
-        .map(CharacterProfileFactory::toDTO)
-        .collect(Collectors.toList());
+  public Page<CharacterProfileDto> loadAll(String queryName,
+                                           String importance,
+                                           String gender,
+                                           Pageable pageable) {
+    return characterProfileRepository.findAllByFilters(queryName, importance, gender, pageable)
+        .map(CharacterProfileFactory::toDTO);
   }
 
   public CharacterProfileDto loadCharacterProfile(Integer id) throws FindDataException {

@@ -16,7 +16,7 @@
 	</parent>
 	<groupId>com.klemmy</groupId>
 	<artifactId>novel-ideas</artifactId>
-	<version>0.0.2-SNAPSHOT</version>
+	<version>0.0.3-SNAPSHOT</version>
 	<name>novel-ideas</name>
 	<description>Demo project for Spring Boot</description>
 
