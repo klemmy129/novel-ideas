@@ -1,5 +1,6 @@
 package com.klemmy.novelideas.service;
 
+import com.klemmy.novelideas.api.BookState;
 import com.klemmy.novelideas.api.CharacterProfileDto;
 import com.klemmy.novelideas.api.BookDto;
 import com.klemmy.novelideas.dto.CharacterProfileFactory;
@@ -9,11 +10,15 @@ import com.klemmy.novelideas.jpa.Book;
 import com.klemmy.novelideas.jpa.CharacterProfile;
 import com.klemmy.novelideas.jpa.repository.BookRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -24,11 +29,10 @@ public class BookService {
 
   private final BookRepository bookRepository;
 
-  public List<BookDto> loadAll() {
-    return bookRepository.findAll()
-        .stream()
-        .map(BookFactory::toDTO)
-        .collect(Collectors.toList());
+  public Page<BookDto> loadAll(String queryTitle, LocalDateTime startDate, LocalDateTime endDate,
+                               Set<BookState> state, Pageable pageable) {
+    return bookRepository.findAllByFilters(queryTitle, startDate, endDate, state, pageable)
+        .map(BookFactory::toDTO);
   }
 
   public BookDto loadBook(Integer id) throws FindDataException {
