@@ -1,11 +1,11 @@
 package com.klemmy.novelideas.service;
 
+import com.klemmy.novelideas.TestEntities;
 import com.klemmy.novelideas.api.CharacterGenderDto;
 import com.klemmy.novelideas.dto.CharacterGenderFactory;
 import com.klemmy.novelideas.error.FindDataException;
 import com.klemmy.novelideas.jpa.CharacterGender;
 import com.klemmy.novelideas.jpa.repository.CharacterGenderRepository;
-import com.klemmy.novelideas.TestEntities;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
@@ -15,15 +15,13 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
-
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 class CharacterGenderServiceTest {
 
@@ -63,7 +61,7 @@ class CharacterGenderServiceTest {
 
         CharacterGenderDto result = service.loadGender(TestEntities.GENERIC_ID);
 
-        assertThat(result.getGender()).isEqualTo(TestEntities.GENERIC_VALUE);
+        assertThat(result.getGender()).isEqualTo(TestEntities.GENDER_MALE);
     }
 
     @Test

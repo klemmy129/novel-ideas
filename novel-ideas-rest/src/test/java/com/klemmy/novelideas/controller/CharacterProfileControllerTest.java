@@ -75,7 +75,7 @@ class CharacterProfileControllerTest {
     this.mockMvc.perform(get("/character-profile/")
             .param("queryName", TestEntities.GENERIC_VALUE)
             .param("importance", TestEntities.GENERIC_VALUE)
-            .param("gender", TestEntities.GENERIC_VALUE2)
+            .param("gender", TestEntities.GENDER_MALE)
             .param("pageable", String.valueOf(PageRequest.of(0, 5)))
         )
         .andExpect(status().isOk())
