@@ -207,9 +207,16 @@ public class TestEntities {
         .name(GENERIC_VALUE)
         .description(PARA)
         .startDate(PAST_DATETIME)
-        .state(BookState.ACTIVE) // bookStateBuilder().build())
+        .state(BookState.ACTIVE)
         .characterProfiles(List.of(TestEntities.characterProfileBuilder().build(),
             TestEntities.characterProfileBuilder2().build()));
+  }
+  public static Book.BookBuilder bookNewBuilder() {
+    return Book.builder()
+        .name(GENERIC_VALUE)
+        .description(PARA)
+        .startDate(PAST_DATETIME)
+        .state(BookState.ACTIVE);
   }
 
   public static Book.BookBuilder bookSmallerBuilder() {
