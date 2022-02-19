@@ -1,0 +1,4 @@
+INSERT INTO BOOK (id,name,description,start_Date,state) VALUES(901,'AAAA','Lorem ipsum dolor sit amet',{ts '1980-07-14 18:47:52.69'},'ACTIVE');
+INSERT INTO BOOK (id,name,description,start_Date,state) VALUES(902,'Harry Potter and the Chamber of Secrets','Lorem ipsum dolor sit amet',{ts '1980-07-17 18:47:52.69'},'ACTIVE');
+INSERT INTO BOOK (id,name,description,start_Date,state) VALUES(903,'Harry Potter and the Deathly Hallows','Lorem ipsum dolor sit amet',{ts '1980-07-14 18:47:52.69'},'ACTIVE');
+INSERT INTO BOOK (id,name,description,start_Date,state) VALUES(904,'Alice in Wonderland','Lorem ipsum dolor sit amet',{ts '1980-07-14 18:47:52.69'},'ACTIVE');

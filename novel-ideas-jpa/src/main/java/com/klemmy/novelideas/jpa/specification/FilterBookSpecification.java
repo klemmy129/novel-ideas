@@ -14,29 +14,28 @@ public class FilterBookSpecification {
   public Specification<Book> isLikeTitle(final String query) {
 
     if (query == null || query.isEmpty()) {
-      return (root, criteriaQuerey, criteriaBuilder) -> null;
+      return (root, criteriaQuery, criteriaBuilder) -> null;
     }
-    return (root, criteriaQuerey, criteriaBuilder) ->
+    return (root, criteriaQuery, criteriaBuilder) ->
         criteriaBuilder.like(criteriaBuilder.lower(root.get("name")), "%" + query.toLowerCase() + "%");
   }
 
   public Specification<Book> hasState(final Set<BookState> state) {
 
     if (state == null || state.isEmpty()) {
-      return (root, criteriaQuerey, criteriaBuilder) -> null;
+      return (root, criteriaQuery, criteriaBuilder) -> null;
     }
-    return (root, criteriaQuerey, criteriaBuilder) -> criteriaBuilder.equal(
+    return (root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.equal(
         root.get("state"), state);
   }
 
   public Specification<Book> isBetweenDate(final LocalDateTime start, final LocalDateTime end) {
 
     if (start == null || end == null) {
-      return (root, criteriaQuerey, criteriaBuilder) -> null;
+      return (root, criteriaQuery, criteriaBuilder) -> null;
     }
-    return (root, criteriaQuerey, criteriaBuilder) -> criteriaBuilder.between(
+    return (root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.between(
         root.get("startDate"), start, end);
-
   }
 
 }
