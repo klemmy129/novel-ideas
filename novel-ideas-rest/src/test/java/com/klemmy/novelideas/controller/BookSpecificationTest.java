@@ -91,12 +91,14 @@ insert into book (id, description, name, start_date, state) values (null, ?, ?, 
 
   }
   
-  /*
-  I know this does not test the specification it was there to get things working when I was getting errors
-  
-  Like you mention this doesn't actually test the specification but it does show a working call to the
-  in memory h2 database.
-   */
+	/*
+	 * I know this does not test the specification it was there to get things
+	 * working when I was getting errors
+	 * 
+	 * I've added a little test that tests the specification. But like you mentioned
+	 * I think the specification testing goes better with the JPA's, so I wouldn't
+	 * suggest putting any more here. Just an example to show the testing works
+	 */
 	@Test
 	@WithMockUser
 	void getId__validData__success() throws Exception {
@@ -118,17 +120,7 @@ insert into book (id, description, name, start_date, state) values (null, ?, ?, 
 
 		assertThat(harryBooks.getContent()).isNotEmpty();
 		assertThat(harryBooks.getContent().size()).isEqualTo(2);
-		
 		assertThat(harryBooks.getContent()).allSatisfy(i -> assertThat(i.getName().contains("harry potter")));
-		
-//		harryBooks.toList().stream().map(b->b.getName()).collect(Collectors.toList());
-//		
-//		harryBooks.flatMap(b->b.getName())
-//
-//		List<Book> hpBooks = List.of(hp2, hp7);
-//		Page<Book> hpBooksPaged = new PageImpl<>(hpBooks);
-//
-//		assertThat(harryBooks).usingRecursiveComparison().isEqualTo(hpBooksPaged);
 	}
 
 //  @Test
