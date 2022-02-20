@@ -1,23 +1,34 @@
 package com.klemmy.novelideas.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.klemmy.novelideas.TestEntities;
-import com.klemmy.novelideas.api.BookDto;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.h2.tools.Server;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.klemmy.novelideas.TestEntities;
+import com.klemmy.novelideas.api.BookDto;
+import com.klemmy.novelideas.dto.BookFactory;
+import com.klemmy.novelideas.jpa.Book;
+import com.klemmy.novelideas.jpa.repository.BookRepository;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -58,41 +69,67 @@ insert into book (id, description, name, start_date, state) values (null, ?, ?, 
   @Autowired
   private ObjectMapper objectMapper;
 
-// Try 1
-//  @Autowired
-//  BookRepository bookRepository;
+  @Autowired
+  BookRepository bookRepository;
 
 
   @WithMockUser
   @BeforeEach
   void setUp() throws Exception {
-// Try 1
-    // Book book = TestEntities.bookBuilder().build();     // with id = 1
-   // // Book book = TestEntities.bookNewBuilder().build();  // with id = null which it should be on create
-    // bookRepository.save(book);
+	 
+	 /*
+	  * I don't know if you've used this at all but I find it very helpful when debugging h2
+	  * If you start the web server you can then connect to the web interface for the h2 database.
+	  * It's what allowed me to see that the flyway scripts wern't being applied
+	  * 
+	  * You can access it at http://localhost:8082/
+	  */
+	 Server.createWebServer("-web", "-webAllowOthers", "-webPort", "8082").start();
+	  
+     Book book = TestEntities.bookNewBuilder().build();  // with id = null which it should be on create
+     bookRepository.save(book);
 
-// Try 2
-    BookDto book = TestEntities.bookDtoBuilder().build();           //with id = 1
-   // BookDto book = TestEntities.bookDtoCreateBuilder().build();  // with id = null which it should be on create
-    this.mockMvc.perform(post("/book/")
-        .contentType(MediaType.APPLICATION_JSON_VALUE)
-        .content(objectMapper.writeValueAsString(book)));
   }
-
+  
   /*
   I know this does not test the specification it was there to get things working when I was getting errors
+  
+  Like you mention this doesn't actually test the specification but it does show a working call to the
+  in memory h2 database.
    */
-  @Test
-  @WithMockUser
-  void getId__validData__success() throws Exception {
-    BookDto dto = TestEntities.bookDtoBuilder().build();
+	@Test
+	@WithMockUser
+	void getId__validData__success() throws Exception {
 
-    this.mockMvc.perform(get("/book/{id}", dto.getId()))
-        .andExpect(status().isOk())
-        .andExpect(content().json(objectMapper.writeValueAsString(dto)))
-        .andExpect(jsonPath("$.id").value(dto.getId()))  // Not needed, just a different way to validate json data
-        .andExpect(jsonPath("$.name").value(dto.getName()));
-  }
+		Book hp2 = TestEntities.bookNewBuilder().name("Harry Potter and the Chamber of Secrets").build();
+		Book hp7 = TestEntities.bookNewBuilder().name("Harry Potter and the Deathly Hallows").build();
+		Book a1 = TestEntities.bookNewBuilder().name("Alice in Wonderland").build();
+
+		bookRepository.save(hp2);
+		bookRepository.save(hp7);
+		bookRepository.save(a1);
+
+		List<Book> books = bookRepository.findAll();
+		assertThat(books).isNotEmpty();
+		assertThat(books.size()).isEqualTo(4);
+
+		Pageable page = PageRequest.of(0, 5);
+		Page<Book> harryBooks = bookRepository.findAllByFilters("harry potter", null, null, null, page);
+
+		assertThat(harryBooks.getContent()).isNotEmpty();
+		assertThat(harryBooks.getContent().size()).isEqualTo(2);
+		
+		assertThat(harryBooks.getContent()).allSatisfy(i -> assertThat(i.getName().contains("harry potter")));
+		
+//		harryBooks.toList().stream().map(b->b.getName()).collect(Collectors.toList());
+//		
+//		harryBooks.flatMap(b->b.getName())
+//
+//		List<Book> hpBooks = List.of(hp2, hp7);
+//		Page<Book> hpBooksPaged = new PageImpl<>(hpBooks);
+//
+//		assertThat(harryBooks).usingRecursiveComparison().isEqualTo(hpBooksPaged);
+	}
 
 //  @Test
 //  @WithMockUser

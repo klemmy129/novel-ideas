@@ -39,7 +39,7 @@ public class Book {
   @Null(groups = OnCreate.class)
   @NotNull(groups = OnUpdate.class)
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @GeneratedValue(strategy = GenerationType.AUTO) 
   @Column(name = "id", nullable = false)
   private Integer id;
 
