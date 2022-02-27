@@ -38,21 +38,22 @@ class BookSpecificationTest {
   @Test
   @WithMockUser
   void findAll__validData__success() {
-    Book bookDB1 = TestEntities.bookNewBuilder().name("BBBB").build();
-    bookRepository.save(bookDB1);
     List<Book> books = bookRepository.findAll();
-    assertThat(books).isNotEmpty();
-    assertThat(books.size()).isEqualTo(5);
-    assertThat(books.stream().findAny().get().getName()).isEqualTo("BBBB");
+
+    assertThat(books).isNotEmpty()
+        .hasSize(4);
+    assertThat(books.stream().findAny().get().getName()).isEqualTo("AAAA");
   }
 
   @Test
   @WithMockUser
   void findAllByFilters__nullFilters__success() {
     Pageable page = PageRequest.of(0, 5);
+
     Page<Book> result = bookRepository.findAllByFilters(null, null, null, null, page);
-    assertThat(result.getContent()).isNotEmpty();
-    assertThat(result.getContent()).hasSize(4);
+
+    assertThat(result.getContent()).isNotEmpty()
+        .hasSize(4);
     assertThat(result.getContent().get(0).getId()).isEqualTo(901);
   }
 
@@ -61,7 +62,9 @@ class BookSpecificationTest {
   void findAllByFilters__noMatchFilters__success() {
     Pageable page = PageRequest.of(0, 5);
     Set<BookState> noMatch = Collections.singleton(BookState.ARCHIVED);
+
     Page<Book> result = bookRepository.findAllByFilters(null, null, null, noMatch, page);
+
     assertThat(result.getContent()).isEmpty();
   }
 
@@ -72,10 +75,12 @@ class BookSpecificationTest {
     LocalDateTime oneMonthEarlier = TestEntities.PAST_DATETIME.minusMonths(1);
     LocalDateTime oneMonthLater = TestEntities.PAST_DATETIME.plusMonths(1);
     Set<BookState> state = Collections.singleton(BookState.ACTIVE);
+
     Page<Book> result = bookRepository.findAllByFilters("harry potter", oneMonthEarlier, oneMonthLater, state, page);
-    assertThat(result.getContent()).isNotEmpty();
-    assertThat(result.getContent()).hasSize(2);
-    assertThat(result.getContent()).allSatisfy(i -> assertThat(i.getName().contains("harry potter")));
+
+    assertThat(result.getContent()).isNotEmpty()
+        .hasSize(2)
+        .allSatisfy(i -> assertThat(i.getName().contains("harry potter")));
   }
 
 }

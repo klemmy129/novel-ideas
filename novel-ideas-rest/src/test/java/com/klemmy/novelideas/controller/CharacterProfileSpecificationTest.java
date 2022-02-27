@@ -34,20 +34,22 @@ class CharacterProfileSpecificationTest {
   @Test
   @WithMockUser
   void findAll__validData__success() {
-    CharacterProfile characterProfileDB1 = TestEntities.characterProfileBuilder().build();
-    characterProfileRepository.save(characterProfileDB1);
     List<CharacterProfile> result = characterProfileRepository.findAll();
-    assertThat(result).isNotEmpty();
-    assertThat(result.size()).isEqualTo(5);
-    assertThat(result.stream().findAny().get().getCharacterName()).isEqualTo(TestEntities.CHAR_NAME);
+
+    assertThat(result).isNotEmpty()
+        .hasSize(4);
+    assertThat(result.stream().findAny().get().getFirstName()).isEqualTo("A");
   }
+
   @Test
   @WithMockUser
   void findAllByFilters__nullFilters__success() {
     Pageable page = PageRequest.of(0, 5);
+
     Page<CharacterProfile> result = characterProfileRepository.findAllByFilters(null, null, null, page);
-    assertThat(result.getContent()).isNotEmpty();
-    assertThat(result.getContent()).hasSize(4);
+
+    assertThat(result.getContent()).isNotEmpty()
+        .hasSize(4);
     assertThat(result.getContent().get(0).getId()).isEqualTo(901);
   }
 
@@ -56,7 +58,7 @@ class CharacterProfileSpecificationTest {
   void findAllByFilters__noMatchFilters__success() {
     Pageable page = PageRequest.of(0, 5);
 
-    Page<CharacterProfile> result = characterProfileRepository.findAllByFilters(null, null,  TestEntities.GENERIC_VALUE, page);
+    Page<CharacterProfile> result = characterProfileRepository.findAllByFilters(null, null, TestEntities.GENERIC_VALUE, page);
 
     assertThat(result.getContent()).isEmpty();
   }
@@ -69,9 +71,9 @@ class CharacterProfileSpecificationTest {
 
     Page<CharacterProfile> result = characterProfileRepository.findAllByFilters("potter", TestEntities.IMPORTANCE_HACK, TestEntities.GENDER_MALE, page);
 
-    assertThat(result.getContent()).isNotEmpty();
-    assertThat(result.getContent()).hasSize(2);
-    assertThat(result.getContent()).allSatisfy(i -> assertThat(i.getCharacterName().contains("Harry Potter")));
+    assertThat(result.getContent()).isNotEmpty()
+        .hasSize(2)
+        .allSatisfy(i -> assertThat(i.getCharacterName().contains("Harry Potter")));
   }
 
 }

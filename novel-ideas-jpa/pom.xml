@@ -12,10 +12,6 @@
 
     <artifactId>novel-ideas-jpa</artifactId>
 
-    <properties>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
-    </properties>
     <profiles>
         <profile>
             <id>oracle</id>

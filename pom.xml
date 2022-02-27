@@ -23,15 +23,15 @@
 	<properties>
 		<java.version>11</java.version>
 
-		<flyway.version>8.4.2</flyway.version>
+		<flyway.version>8.5.0</flyway.version>
 		<h2.version>2.1.210</h2.version>
 <!--		<hibernate-validator.version>7.0.2.Final</hibernate-validator.version>-->
 		<junit-launcher.version>1.8.2</junit-launcher.version>
 		<modelmapper.version>2.4.5</modelmapper.version>
 		<spring-boot.version>2.6.3</spring-boot.version>
-		<springdoc.version>1.6.4</springdoc.version>
-		<swagger-v3.version>2.1.12</swagger-v3.version>
-		<typescript-generator.version>2.34.976</typescript-generator.version>
+		<springdoc.version>1.6.6</springdoc.version>
+		<swagger-v3.version>2.1.13</swagger-v3.version>
+		<typescript-generator.version>2.35.1025</typescript-generator.version>
 	</properties>
 
 	<dependencyManagement>
@@ -68,5 +68,4 @@
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
-
 </project>
