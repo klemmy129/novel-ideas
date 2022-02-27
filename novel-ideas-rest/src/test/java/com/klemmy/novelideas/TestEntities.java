@@ -1,15 +1,14 @@
 package com.klemmy.novelideas;
 
+import com.klemmy.novelideas.api.BookDto;
+import com.klemmy.novelideas.api.BookState;
+import com.klemmy.novelideas.api.CharacterGenderDto;
 import com.klemmy.novelideas.api.CharacterImportanceDto;
 import com.klemmy.novelideas.api.CharacterProfileDto;
-import com.klemmy.novelideas.api.CharacterGenderDto;
-import com.klemmy.novelideas.api.BookDto;
-import com.klemmy.novelideas.api.BookStateDto;
 import com.klemmy.novelideas.jpa.Book;
+import com.klemmy.novelideas.jpa.CharacterGender;
 import com.klemmy.novelideas.jpa.CharacterImportance;
 import com.klemmy.novelideas.jpa.CharacterProfile;
-import com.klemmy.novelideas.jpa.CharacterGender;
-import com.klemmy.novelideas.jpa.BookState;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -28,9 +27,11 @@ public class TestEntities {
   public static final String CHAR_NAME = "John Doe";
   public static final String FIRST_NAME = "John";
   public static final String SURNAME = "Doe";
-  public static final String CHAR_NAME2 = "Jane Smith";
+  public static final String CHAR_NAME2 = "Jane Doe";
   public static final String FIRST_NAME2 = "Jane";
-  public static final String SURNAME2 = "Smith";
+  public static final String SURNAME2 = "Doe";
+  public static final String GENDER_MALE = "Male";
+  public static final String IMPORTANCE_HACK = "hack";
   public static final String PARA = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec ullamcorper " +
       "sodales eleifend. Morbi odio elit, pretium sit amet diam vitae.";
   public static final String PARA2 = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent iaculis " +
@@ -48,7 +49,7 @@ public class TestEntities {
   public static CharacterGender.CharacterGenderBuilder characterGenderBuilder() {
     return CharacterGender.builder()
         .id(GENERIC_ID)
-        .gender(GENERIC_VALUE)
+        .gender(GENDER_MALE)
         .isDeleted(false);
   }
 
@@ -61,14 +62,14 @@ public class TestEntities {
 
   public static CharacterGenderDto.CharacterGenderDtoBuilder characterGenderDtoCreateBuilder() {
     return CharacterGenderDto.builder()
-        .gender(GENERIC_VALUE)
+        .gender(GENDER_MALE)
         .isDeleted(false);
   }
 
   public static CharacterGenderDto.CharacterGenderDtoBuilder characterGenderDtoBuilder() {
     return CharacterGenderDto.builder()
         .id(GENERIC_ID)
-        .gender(GENERIC_VALUE)
+        .gender(GENDER_MALE)
         .isDeleted(false);
   }
 
@@ -105,44 +106,11 @@ public class TestEntities {
         .importance(GENERIC_VALUE)
         .isDeleted(false);
   }
+
   public static CharacterImportanceDto.CharacterImportanceDtoBuilder characterImportanceDtoBuilder2() {
     return CharacterImportanceDto.builder()
         .id(GENERIC_ID2)
         .importance(GENERIC_VALUE2)
-        .isDeleted(false);
-  }
-
-  public static BookState.BookStateBuilder bookStateBuilder() {
-    return BookState.builder()
-        .id(GENERIC_ID)
-        .state(GENERIC_VALUE)
-        .isDeleted(false);
-  }
-
-  public static BookState.BookStateBuilder bookStateBuilder2() {
-    return BookState.builder()
-        .id(GENERIC_ID2)
-        .state(GENERIC_VALUE2)
-        .isDeleted(false);
-  }
-
-  public static BookStateDto.BookStateDtoBuilder bookStateDtoCreateBuilder() {
-    return BookStateDto.builder()
-        .state(GENERIC_VALUE)
-        .isDeleted(false);
-  }
-
-  public static BookStateDto.BookStateDtoBuilder bookStateDtoBuilder() {
-    return BookStateDto.builder()
-        .id(GENERIC_ID)
-        .state(GENERIC_VALUE)
-        .isDeleted(false);
-  }
-
-  public static BookStateDto.BookStateDtoBuilder bookStateDtoBuilder2() {
-    return BookStateDto.builder()
-        .id(GENERIC_ID2)
-        .state(GENERIC_VALUE2)
         .isDeleted(false);
   }
 
@@ -241,9 +209,16 @@ public class TestEntities {
         .name(GENERIC_VALUE)
         .description(PARA)
         .startDate(PAST_DATETIME)
-        .state(bookStateBuilder().build())
+        .state(BookState.ACTIVE)
         .characterProfiles(List.of(TestEntities.characterProfileBuilder().build(),
             TestEntities.characterProfileBuilder2().build()));
+  }
+  public static Book.BookBuilder bookNewBuilder() {
+    return Book.builder()
+        .name(GENERIC_VALUE)
+        .description(PARA)
+        .startDate(PAST_DATETIME)
+        .state(BookState.ACTIVE);
   }
 
   public static Book.BookBuilder bookSmallerBuilder() {
@@ -260,7 +235,7 @@ public class TestEntities {
         .name(GENERIC_VALUE2)
         .description(PARA2)
         .startDate(PAST_DATETIME)
-        .state(bookStateBuilder().build());
+        .state(BookState.ACTIVE);
 
   }
 
@@ -270,18 +245,19 @@ public class TestEntities {
         .name(GENERIC_VALUE)
         .description(PARA)
         .startDate(PAST_DATETIME)
-        .state(bookStateDtoBuilder().build())
+        .state(BookState.ACTIVE)
         .characterProfiles(List.of(TestEntities.characterProfileDtoBuilder().build(),
             TestEntities.characterProfileDtoBuilder2().build()));
 
   }
+
   public static BookDto.BookDtoBuilder bookDtoBuilder2() {
     return BookDto.builder()
         .id(GENERIC_ID2)
         .name(GENERIC_VALUE2)
         .description(PARA2)
         .startDate(PAST_DATETIME)
-        .state(bookStateDtoBuilder().build())
+        .state(BookState.ACTIVE)
         .characterProfiles(List.of(TestEntities.characterProfileDtoBuilder().build(),
             TestEntities.characterProfileDtoBuilder2().build()));
   }
@@ -292,7 +268,7 @@ public class TestEntities {
         .name(GENERIC_VALUE)
         .description(PARA)
         .startDate(PAST_DATETIME)
-        .state(bookStateDtoBuilder().build())
+        .state(BookState.ACTIVE)
         .characterProfiles(List.of(TestEntities.characterProfileDtoBuilder().build()));
 
   }
@@ -311,7 +287,7 @@ public class TestEntities {
         .name(GENERIC_VALUE)
         .description(PARA)
         .startDate(PAST_DATETIME)
-        .state(bookStateDtoBuilder().build())
+        .state(BookState.ACTIVE)
         .characterProfiles(List.of(TestEntities.characterProfileDtoBuilder().build(),
             TestEntities.characterProfileDtoBuilder2().build()));
 

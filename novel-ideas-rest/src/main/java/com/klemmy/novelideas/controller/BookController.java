@@ -1,5 +1,6 @@
 package com.klemmy.novelideas.controller;
 
+import com.klemmy.novelideas.api.BookState;
 import com.klemmy.novelideas.api.CharacterProfileDto;
 import com.klemmy.novelideas.api.OnCreate;
 import com.klemmy.novelideas.api.OnUpdate;
@@ -12,6 +13,11 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
+import org.springdoc.api.annotations.ParameterObject;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
@@ -22,11 +28,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @AllArgsConstructor
@@ -40,8 +49,14 @@ public class BookController {
   @GetMapping("/")
   @Operation(summary = "Get all Books", description = "List all the Books that represents a novel or script")
   @ApiResponse(responseCode = "400", description = "Invalid")
-  public List<BookDto> getAll() {
-    return bookService.loadAll();
+  public Page<BookDto> getAll(@RequestParam(required = false) String queryTitle,
+                              @RequestParam(required = false)
+                              @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
+                              @RequestParam(required = false)
+                              @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate,
+                              @RequestParam(required = false) Set<BookState> state,
+                              @ParameterObject @PageableDefault(size = 20, sort = "name") Pageable pageable) {
+    return bookService.loadAll(queryTitle, startDate, endDate, state, pageable);
   }
 
   @GetMapping("/{id}")
@@ -86,7 +101,7 @@ public class BookController {
       description = "Add a Character to a book that represents a novel or script")
   @ApiResponse(responseCode = "400", description = "Invalid")
   public BookDto addCharacterToBook(@PathVariable @Parameter(required = true, description = "Book Id") Integer bookId,
-                 @RequestBody @Parameter(required = true, description = "Character Profile") @Valid CharacterProfileDto characterProfileDto) throws FindDataException {
+                                    @RequestBody @Parameter(required = true, description = "Character Profile") @Valid CharacterProfileDto characterProfileDto) throws FindDataException {
     return bookService.addCharacter(bookId, characterProfileDto);
   }
 

@@ -1,6 +1,7 @@
 package com.klemmy.novelideas.service;
 
 import com.klemmy.novelideas.TestEntities;
+import com.klemmy.novelideas.api.BookState;
 import com.klemmy.novelideas.api.CharacterProfileDto;
 import com.klemmy.novelideas.api.BookDto;
 import com.klemmy.novelideas.dto.CharacterProfileFactory;
@@ -12,16 +13,24 @@ import com.klemmy.novelideas.jpa.repository.BookRepository;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -34,23 +43,44 @@ class BookServiceTest {
   private final BookService service = new BookService(repository);
 
   @Test
-  void loadAll__validData__success() {
+  void loadAll__noParams__success() {
+    Pageable page = PageRequest.of(0, 5);
     List<Book> books = List.of(TestEntities.bookBuilder().build(), TestEntities.bookBuilderNoChars().build());
-    when(repository.findAll()).thenReturn(books);
+    Page<Book> booksPaged = new PageImpl<>(books);
+    when(repository.findAllByFilters(eq(null), eq(null), eq(null), eq(null), any(Pageable.class))).thenReturn(booksPaged);
 
-    List<BookDto> result = service.loadAll();
+    Page<BookDto> result = service.loadAll(null, null, null, null, page);
 
-    assertThat(result).usingRecursiveComparison().isEqualTo(books.stream().map(BookFactory::toDTO).collect(Collectors.toList()));
+    assertThat(result).usingRecursiveComparison().isEqualTo(booksPaged.map(BookFactory::toDTO));
+  }
+
+  @Test
+  void loadAll__allParams__success() {
+    Pageable page = PageRequest.of(0, 5);
+    List<Book> books = List.of(TestEntities.bookBuilder().build());
+    Page<Book> booksPaged = new PageImpl<>(books);
+    LocalDateTime oneMonthEarlier = TestEntities.PAST_DATETIME.minusMonths(1);
+    LocalDateTime oneMonthLater = TestEntities.PAST_DATETIME.plusMonths(1);
+    Set<BookState> state = Collections.singleton(BookState.ACTIVE);
+
+    when(repository.findAllByFilters(eq(TestEntities.GENERIC_VALUE), eq(oneMonthEarlier), eq(oneMonthLater),
+        eq(state), any(Pageable.class))).thenReturn(booksPaged);
+
+    Page<BookDto> result = service.loadAll(TestEntities.GENERIC_VALUE, oneMonthEarlier, oneMonthLater, state, page);
+
+    assertThat(result).usingRecursiveComparison().isEqualTo(booksPaged.map(BookFactory::toDTO));
   }
 
   @Test
   void loadAll__emptyData__success() {
+    Pageable page = PageRequest.of(0, 5);
     List<Book> books = new ArrayList<>();
-    when(repository.findAll()).thenReturn(books);
+    Page<Book> booksPaged = new PageImpl<>(books);
+    when(repository.findAllByFilters(eq(null), eq(null), eq(null), eq(null), any(Pageable.class))).thenReturn(booksPaged);
 
-    List<BookDto> result = service.loadAll();
+    Page<BookDto> result = service.loadAll(null, null, null, null, page);
 
-    assertThat(result).usingRecursiveComparison().isEqualTo(books.stream().map(BookFactory::toDTO).collect(Collectors.toList()));
+    assertThat(result).usingRecursiveComparison().isEqualTo(booksPaged.map(BookFactory::toDTO));
     assertThat(result).isEmpty();
   }
 

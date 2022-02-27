@@ -11,21 +11,29 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import javax.validation.ConstraintViolationException;
+import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -44,16 +52,36 @@ class CharacterProfileControllerTest {
 
   @Test
   @WithMockUser
-  void getAll__success() throws Exception {
-    List<CharacterProfileDto> dtoList = List.of(
+  void getAll__withNoInputs__success() throws Exception {
+    Page<CharacterProfileDto> dtoList = new PageImpl<>(List.of(
         TestEntities.characterProfileDtoBuilder().build(),
-        TestEntities.characterProfileDtoBuilder2().build());
-    when(service.loadAll()).thenReturn(dtoList);
+        TestEntities.characterProfileDtoBuilder2().build()));
+    when(service.loadAll(eq(null), eq(null), eq(null), any(Pageable.class))).thenReturn(dtoList);
 
     this.mockMvc.perform(get("/character-profile/"))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$[0].id").value(dtoList.get(0).getId()))
-        .andExpect(jsonPath("$[1].id").value(dtoList.get(1).getId()));
+        .andExpect(content().json(objectMapper.writeValueAsString(dtoList)))
+        .andExpect(jsonPath("$.content[0].id").value(dtoList.getContent().get(0).getId())) // Not needed, just a different way to validate json data
+        .andExpect(jsonPath("$.content[1].id").value(dtoList.getContent().get(1).getId())); // Not needed, just a different way to validate json data
+  }
+
+  @Test
+  @WithMockUser
+  void getAll__withInputs__success() throws Exception {
+    Page<CharacterProfileDto> dtoList = new PageImpl<>(Collections.singletonList(TestEntities.characterProfileDtoBuilder().build()));
+
+    when(service.loadAll(anyString(), anyString(), anyString(), any(Pageable.class))).thenReturn(dtoList);
+
+    this.mockMvc.perform(get("/character-profile/")
+            .param("queryName", TestEntities.GENERIC_VALUE)
+            .param("importance", TestEntities.GENERIC_VALUE)
+            .param("gender", TestEntities.GENDER_MALE)
+            .param("pageable", String.valueOf(PageRequest.of(0, 5)))
+        )
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(content().json(objectMapper.writeValueAsString(dtoList)))
+        .andExpect(jsonPath("$.content[0].id").value(dtoList.getContent().get(0).getId())); // Not needed, just a different way to validate json data
   }
 
   @Test
