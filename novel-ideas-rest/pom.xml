@@ -81,7 +81,7 @@
         <dependency>
             <groupId>io.swagger.core.v3</groupId>
             <artifactId>swagger-models</artifactId>
-            <version>2.1.11</version>
+            <version>${swagger-v3.version}</version>
         </dependency>
     </dependencies>
 

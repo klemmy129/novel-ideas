@@ -77,11 +77,7 @@
                     </classPatterns>
                     <outputKind>module</outputKind>
                     <generateNpmPackageJson>true</generateNpmPackageJson>
-<!--                    <scanSpringApplication>true</scanSpringApplication>-->
                     <npmVersion>${human.version}</npmVersion>
-<!--                    <generateSpringApplicationClient>true</generateSpringApplicationClient>-->
-                    <npmTypescriptVersion>4.2.0</npmTypescriptVersion>
-                    <outputFileType>implementationFile</outputFileType>
                 </configuration>
                 <dependencies>
                     <dependency>

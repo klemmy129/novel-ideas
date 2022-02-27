@@ -32,7 +32,7 @@ public class CharacterProfile {
   @Null(groups = OnCreate.class)
   @NotNull(groups = OnUpdate.class)
   @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(nullable = false)
   private Integer id;
 

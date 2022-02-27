@@ -13,7 +13,8 @@
 # Intellij
 .idea/*
 *.iml
-./target/*
+target/
+.jpb/
 
 # VS Code
 .vscode/*
