@@ -6,7 +6,7 @@
 This is also a Java Spring Boot demonstrator for a Rest application
 
 **Technology Used:**
-- Java 11
+- Java 17
 - Maven
 - Spring Boot 2.6.x
 - JPA/Hibernate
@@ -75,6 +75,29 @@ In the API's `pom.xml` the build plugins I configured to build a typescript modu
 This will help with front-end development.
 
 ## Coding Sample Explained - WIP
+### Constructor-based Dependency Injection
+I use Constructor-based Dependency Injection over Spring's `@Autowire`
+
+Pros
+- It makes unit testing easier. You can use the `new` keyword, so you do not depend on reflection.
+- You can use `final` which assists with thread safety and final feels more stable. 
+- It makes it immutable.
+
+Cons
+- More code, but I use Lombok's `@AllArgsConstructor`.
+
+Example:
+```java
+@AllArgsConstructor
+public class BookController {
+  private final BookService bookService;
+
+  public BookDto getBook(Integer id) {
+    return bookService.loadBook(id);
+  }
+}
+```
+
 ### Enum
 [BookState](novel-ideas-api/src/main/java/com/klemmy/novelideas/api/BookState.java) is the only Enum that has been created in this project.
 A display value was added to show a more english output. 

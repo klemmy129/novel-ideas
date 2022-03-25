@@ -6,7 +6,6 @@
         <groupId>com.klemmy</groupId>
         <artifactId>novel-ideas</artifactId>
         <version>0.0.3-SNAPSHOT</version>
-        <relativePath>../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -26,7 +25,6 @@
                 <dependency>
                     <groupId>com.h2database</groupId>
                     <artifactId>h2</artifactId>
-                    <version>${h2.version}</version>
                 </dependency>
             </dependencies>
         </profile>
@@ -40,7 +38,6 @@
                 <dependency>
                     <groupId>com.h2database</groupId>
                     <artifactId>h2</artifactId>
-                    <version>${h2.version}</version>
                 </dependency>
             </dependencies>
         </profile>
@@ -50,7 +47,6 @@
                 <dependency>
                     <groupId>com.h2database</groupId>
                     <artifactId>h2</artifactId>
-                    <version>${h2.version}</version>
                 </dependency>
             </dependencies>
         </profile>
@@ -59,18 +55,14 @@
         <dependency>
             <groupId>com.klemmy</groupId>
             <artifactId>novel-ideas-api</artifactId>
-            <version>${project.version}</version>
-            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.flywaydb</groupId>
             <artifactId>flyway-core</artifactId>
-            <version>${flyway.version}</version>
         </dependency>
         <dependency>
             <groupId>org.hibernate.validator</groupId>
             <artifactId>hibernate-validator</artifactId>
-            <version>${hibernate-validator.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
