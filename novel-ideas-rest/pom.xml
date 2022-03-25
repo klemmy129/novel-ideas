@@ -6,34 +6,27 @@
         <artifactId>novel-ideas</artifactId>
         <groupId>com.klemmy</groupId>
         <version>0.0.3-SNAPSHOT</version>
-        <relativePath>../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>novel-ideas-rest</artifactId>
 
-    <properties>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>com.klemmy</groupId>
             <artifactId>novel-ideas-api</artifactId>
-            <version>${project.version}</version>
-            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>com.klemmy</groupId>
             <artifactId>novel-ideas-jpa</artifactId>
-            <version>${project.version}</version>
-            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.swagger.core.v3</groupId>
+            <artifactId>swagger-models</artifactId>
         </dependency>
         <dependency>
             <groupId>org.hibernate.validator</groupId>
             <artifactId>hibernate-validator</artifactId>
-            <version>${hibernate-validator.version}</version>
         </dependency>
         <dependency>
             <groupId>org.modelmapper</groupId>
@@ -57,7 +50,7 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
-<!--        Test -->
+<!--        Test  -->
         <dependency>
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest-core</artifactId>
@@ -78,13 +71,7 @@
             <artifactId>spring-security-test</artifactId>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>io.swagger.core.v3</groupId>
-            <artifactId>swagger-models</artifactId>
-            <version>${swagger-v3.version}</version>
-        </dependency>
     </dependencies>
-
     <build>
         <plugins>
             <plugin>
