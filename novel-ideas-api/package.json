@@ -1,0 +1,17 @@
+{
+  "name": "novel-ideas-api",
+  "version": "${human.version}",
+  "types": "novel-ideas-api.d.ts",
+  "description": "Interface models for novel-ideas java app",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/klemmy129/novel-ideas.git"
+  },
+  "keywords": ["novel-ideas"],
+  "author": "klemmy129",
+  "license": "GPL-3.0 License",
+  "bugs": {
+    "url": "https://github.com/klemmy129/novel-ideas/issues"
+  },
+  "homepage": "https://github.com/klemmy129/novel-ideas"
+}

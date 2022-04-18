@@ -1,5 +1,6 @@
 package com.klemmy.novelideas.api;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Generated;
@@ -17,6 +18,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @Generated
 @Builder
+@Schema(description = "Character Gender")
 public class CharacterGenderDto implements Serializable {
 
   @Null(groups = OnCreate.class)

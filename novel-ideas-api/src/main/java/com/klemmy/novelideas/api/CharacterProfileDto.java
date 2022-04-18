@@ -1,5 +1,6 @@
 package com.klemmy.novelideas.api;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
@@ -12,6 +13,7 @@ import java.time.LocalDate;
 
 @Data
 @Builder(toBuilder = true)
+@Schema(description = "Character Profile")
 public class CharacterProfileDto implements Serializable {
 
   @Null(groups = OnCreate.class)

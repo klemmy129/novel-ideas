@@ -1,14 +1,24 @@
 # novel-ideas
-**DRAFT - In work**
 
-**Description:** This application is Rest backend is for managing data and information about a novel or script you want to write
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/klemmy129/novel-ideas?display_name=tag)
+![GitHub top language](https://img.shields.io/github/languages/top/klemmy129/novel-ideas)
+![GitHub](https://img.shields.io/github/license/klemmy129/novel-ideas)
+![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/klemmy129/novel-ideas)
+![GitHub Workflow Status](https://img.shields.io/github/workflow/status/klemmy129/novel-ideas/CodeQL)
+![Snyk Vulnerabilities for GitHub Repo (Specific Manifest)](https://img.shields.io/snyk/vulnerabilities/github/klemmy129/novel-ideas/pom.xml)
+![GitHub issues](https://img.shields.io/github/issues/klemmy129/novel-ideas)
 
-This is also a Java Spring Boot demonstrator for a Rest application
+## Description  
+This application is Rest backend is for managing data and information about a novel or script you want to write.
 
-**Technology Used:**
+This is also a Java Spring Boot demonstrator for a Rest application.
+
+The frontend Demo to this application is [novel-ideas-iu](https://github.com/klemmy129/novel-ideas-ui) an Angular 13 application.
+
+### Technology Used
 - Java 17
 - Maven
-- Spring Boot 2.6.x
+- Spring Boot 2.6.6
 - JPA/Hibernate
 - FlyWay
   - Oracle 18c XE
@@ -165,6 +175,4 @@ _Talking about Unit testing COMING SOON_
 
 ## Other Stuff
 _COMING SOON_ I still need to think about it.
-
-I will probably start the next project, which is likely to be the Angular 12 UI to this Rest application. This one will be the big learning one for me, it's been a while.
 
