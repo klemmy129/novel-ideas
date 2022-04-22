@@ -1,6 +1,6 @@
 # novel-ideas
 
-![GitHub release (latest by date)](https://img.shields.io/github/v/release/klemmy129/novel-ideas?display_name=tag)
+![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/klemmy129/novel-ideas?display_name=tag&sort=semver)
 ![GitHub top language](https://img.shields.io/github/languages/top/klemmy129/novel-ideas)
 ![GitHub](https://img.shields.io/github/license/klemmy129/novel-ideas)
 ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/klemmy129/novel-ideas)
