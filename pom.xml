@@ -11,12 +11,12 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.6.7</version>
+        <version>2.7.1</version>
          <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.klemmy</groupId>
     <artifactId>novel-ideas</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.2</version>
     <name>novel-ideas</name>
     <description>Demo project for Spring Boot</description>
 
@@ -24,14 +24,12 @@
         <java.version>17</java.version>
 
         <codehaus-helper.version>3.3.0</codehaus-helper.version>
-        <flyway.version>8.5.7</flyway.version>
-        <h2.version>2.1.210</h2.version>
         <junit-launcher.version>1.8.2</junit-launcher.version>
         <modelmapper.version>3.1.0</modelmapper.version>
         <resource-plugin.version>3.2.0</resource-plugin.version>
-        <spring-boot.version>2.6.7</spring-boot.version>
-        <springdoc.version>1.6.7</springdoc.version>
-        <swagger-v3.version>2.2.0</swagger-v3.version>
+        <spring-boot.version>2.7.1</spring-boot.version>
+        <springdoc.version>1.6.9</springdoc.version>
+        <swagger-v3.version>2.2.1</swagger-v3.version>
         <typescript-generator.version>2.36.1070</typescript-generator.version>
     </properties>
 
@@ -65,6 +63,11 @@
                 <artifactId>swagger-annotations</artifactId>
                 <version>${swagger-v3.version}</version>
                 <scope>compile</scope>
+            </dependency>
+            <dependency>
+                <groupId>io.swagger.core.v3</groupId>
+                <artifactId>swagger-integration</artifactId>
+                <version>${swagger-v3.version}</version>
             </dependency>
             <dependency>
                 <groupId>io.swagger.core.v3</groupId>

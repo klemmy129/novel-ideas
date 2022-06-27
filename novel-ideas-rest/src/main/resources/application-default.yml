@@ -1,4 +1,6 @@
 server:
+  servlet:
+    context-path: "/"
   port: ${PORT:10443}
   http2:
     enabled: true
@@ -18,3 +20,13 @@ server:
     enabled-protocols:
     - TLSv1.2
     - TLSv1.3
+info:
+  app:
+    # Get the version from the POM file and injected into SpringDoc Info
+    version: @project.version@
+springdoc:
+  swagger-ui:
+    #For sorting endpoints alphabetically
+    operationsSorter: alpha
+    #For sorting tags alphabetically
+    tagsSorter: alpha

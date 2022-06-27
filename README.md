@@ -18,7 +18,7 @@ The frontend Demo to this application is [novel-ideas-iu](https://github.com/kle
 ### Technology Used
 - Java 17
 - Maven
-- Spring Boot 2.6.6
+- Spring Boot 2.7.1
 - JPA/Hibernate
 - FlyWay
   - Oracle 18c XE
