@@ -1,3 +1,6 @@
+server:
+  servlet:
+    context-path: "/"
 spring:
   jpa:
     database: h2
@@ -13,4 +16,6 @@ spring:
     driverClassName: org.h2.Driver
   flyway:
     enabled: false
-
+info:
+  app:
+    version: 1.0.2

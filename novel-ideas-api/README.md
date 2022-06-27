@@ -1,6 +1,5 @@
 # novel-ideas-api NPM
 
-![GitHub package.json version](https://img.shields.io/github/novel-ideas-api/package-json/v/klemmy129/novel-ideas)
 ![GitHub](https://img.shields.io/github/license/klemmy129/novel-ideas)
 
 
@@ -27,4 +26,4 @@ npm install novel-ideas-api
 - Java 17
 - Maven
 - cz.habarta.typescript-generator pluggin
-- Spring Boot 2.6.x
+- Spring Boot 2.7.x
