@@ -60,24 +60,24 @@ public class TestEntities {
         .isDeleted(false);
   }
 
-  public static CharacterGenderDto.CharacterGenderDtoBuilder characterGenderDtoCreateBuilder() {
-    return CharacterGenderDto.builder()
-        .gender(GENDER_MALE)
-        .isDeleted(false);
+  public static CharacterGenderDto characterGenderDtoCreateBuilder() {
+    return new CharacterGenderDto(null, GENDER_MALE, false);
   }
 
-  public static CharacterGenderDto.CharacterGenderDtoBuilder characterGenderDtoBuilder() {
-    return CharacterGenderDto.builder()
-        .id(GENERIC_ID)
-        .gender(GENDER_MALE)
-        .isDeleted(false);
+  public static CharacterGenderDto characterGenderDtoBuilder() {
+    return new CharacterGenderDto(GENERIC_ID, GENDER_MALE, false);
   }
 
-  public static CharacterGenderDto.CharacterGenderDtoBuilder characterGenderDtoBuilder2() {
-    return CharacterGenderDto.builder()
-        .id(GENERIC_ID2)
-        .gender(GENERIC_VALUE2)
-        .isDeleted(false);
+  public static CharacterGenderDto characterGenderDtoBuilder2() {
+    return new CharacterGenderDto(GENERIC_ID2, GENERIC_VALUE2, false);
+  }
+
+  public static CharacterGenderDto characterGenderDtoBadCreateBuilder() {
+    return new CharacterGenderDto(NOT_GENERIC_ID, GENDER_MALE, false);
+  }
+
+  public static CharacterGenderDto characterGenderDtoBadNullIdCreateBuilder() {
+    return new CharacterGenderDto(null, GENDER_MALE, false);
   }
 
   public static CharacterImportance.CharacterImportanceBuilder characterImportanceBuilder() {
@@ -93,26 +93,41 @@ public class TestEntities {
         .importance(GENERIC_VALUE2)
         .isDeleted(false);
   }
-
-  public static CharacterImportanceDto.CharacterImportanceDtoBuilder characterImportanceDtoCreateBuilder() {
-    return CharacterImportanceDto.builder()
-        .importance(GENERIC_VALUE)
-        .isDeleted(false);
+  public static CharacterImportanceDto characterImportanceDtoCreateBuilder() {
+    return new CharacterImportanceDto(null,GENERIC_VALUE,false);
   }
 
-  public static CharacterImportanceDto.CharacterImportanceDtoBuilder characterImportanceDtoBuilder() {
-    return CharacterImportanceDto.builder()
-        .id(GENERIC_ID)
-        .importance(GENERIC_VALUE)
-        .isDeleted(false);
+  public static CharacterImportanceDto characterImportanceDtoBuilder() {
+    return new CharacterImportanceDto(
+        GENERIC_ID,
+        GENERIC_VALUE,
+        false);
   }
 
-  public static CharacterImportanceDto.CharacterImportanceDtoBuilder characterImportanceDtoBuilder2() {
-    return CharacterImportanceDto.builder()
-        .id(GENERIC_ID2)
-        .importance(GENERIC_VALUE2)
-        .isDeleted(false);
+  public static CharacterImportanceDto characterImportanceDtoBuilder2() {
+    return new CharacterImportanceDto(
+        GENERIC_ID2,GENERIC_VALUE2,false);
   }
+
+//  public static CharacterImportanceDto.CharacterImportanceDtoBuilder characterImportanceDtoCreateBuilder() {
+//    return CharacterImportanceDto.builder()
+//        .importance(GENERIC_VALUE)
+//        .isDeleted(false);
+//  }
+//
+//  public static CharacterImportanceDto.CharacterImportanceDtoBuilder characterImportanceDtoBuilder() {
+//    return CharacterImportanceDto.builder()
+//        .id(GENERIC_ID)
+//        .importance(GENERIC_VALUE)
+//        .isDeleted(false);
+//  }
+//
+//  public static CharacterImportanceDto.CharacterImportanceDtoBuilder characterImportanceDtoBuilder2() {
+//    return CharacterImportanceDto.builder()
+//        .id(GENERIC_ID2)
+//        .importance(GENERIC_VALUE2)
+//        .isDeleted(false);
+//  }
 
   public static CharacterProfile.CharacterProfileBuilder characterProfileBuilder() {
     return CharacterProfile.builder()
@@ -157,9 +172,9 @@ public class TestEntities {
         .firstName(FIRST_NAME)
         .middleName("X")
         .surname(SURNAME)
-        .gender(characterGenderDtoBuilder().build())
+        .gender(characterGenderDtoBuilder())
         .nickName("Joe")
-        .characterImportance(characterImportanceDtoBuilder().build())
+        .characterImportance(characterImportanceDtoBuilder())
         .dateOfBirth(PAST_DATE)
         .functionInStory(PARA)
         .innerGoal(PARA)
@@ -175,9 +190,9 @@ public class TestEntities {
         .firstName(FIRST_NAME)
         .middleName("X")
         .surname(SURNAME)
-        .gender(characterGenderDtoBuilder().build())
+        .gender(characterGenderDtoBuilder())
         .nickName("Joe")
-        .characterImportance(characterImportanceDtoBuilder().build())
+        .characterImportance(characterImportanceDtoBuilder())
         .dateOfBirth(PAST_DATE)
         .functionInStory(PARA)
         .innerGoal(PARA)
@@ -193,9 +208,9 @@ public class TestEntities {
         .firstName(FIRST_NAME2)
         .middleName("X")
         .surname(SURNAME2)
-        .gender(characterGenderDtoBuilder().build())
+        .gender(characterGenderDtoBuilder())
         .nickName("Janie")
-        .characterImportance(characterImportanceDtoBuilder2().build())
+        .characterImportance(characterImportanceDtoBuilder2())
         .dateOfBirth(PAST_DATE)
         .functionInStory(PARA2)
         .innerGoal(PARA2)

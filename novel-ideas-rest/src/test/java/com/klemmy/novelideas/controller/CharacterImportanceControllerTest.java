@@ -46,25 +46,25 @@ class CharacterImportanceControllerTest {
   @WithMockUser
   void getAll__success() throws Exception {
     List<CharacterImportanceDto> dtoList = List.of(
-        TestEntities.characterImportanceDtoBuilder().build(),
-        TestEntities.characterImportanceDtoBuilder2().build());
+        TestEntities.characterImportanceDtoBuilder(),
+        TestEntities.characterImportanceDtoBuilder2());
     when(service.loadAll()).thenReturn(dtoList);
 
     this.mockMvc.perform(get("/character-importance/"))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$[0].id").value(dtoList.get(0).getId()))
-        .andExpect(jsonPath("$[1].id").value(dtoList.get(1).getId()));
+        .andExpect(jsonPath("$[0].id").value(dtoList.get(0).id()))
+        .andExpect(jsonPath("$[1].id").value(dtoList.get(1).id()));
   }
 
   @Test
   @WithMockUser
   void getId__validData__success() throws Exception {
-    CharacterImportanceDto dto = TestEntities.characterImportanceDtoBuilder().build();
-    when(service.loadCharacterImportance(dto.getId())).thenReturn(dto);
+    CharacterImportanceDto dto = TestEntities.characterImportanceDtoBuilder();
+    when(service.loadCharacterImportance(dto.id())).thenReturn(dto);
 
-    this.mockMvc.perform(get("/character-importance/{id}", dto.getId()))
+    this.mockMvc.perform(get("/character-importance/{id}", dto.id()))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.id").value(dto.getId()));
+        .andExpect(jsonPath("$.id").value(dto.id()));
   }
 
   @Test
@@ -82,20 +82,20 @@ class CharacterImportanceControllerTest {
   @Test
   @WithMockUser
   void create__validData__success() throws Exception {
-    CharacterImportanceDto dto = TestEntities.characterImportanceDtoCreateBuilder().build();
+    CharacterImportanceDto dto = TestEntities.characterImportanceDtoCreateBuilder();
     when(service.create(any(CharacterImportanceDto.class))).thenReturn(dto);
 
     this.mockMvc.perform(post("/character-importance/")
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .content(objectMapper.writeValueAsString(dto)))
         .andExpect(status().isCreated())
-        .andExpect(jsonPath("$.id").value(dto.getId()));
+        .andExpect(jsonPath("$.id").value(dto.id()));
   }
 
   @Test
   @WithMockUser
   void create__inValidData__failure() throws Exception {
-    CharacterImportanceDto dtoBad = TestEntities.characterImportanceDtoBuilder().build();
+    CharacterImportanceDto dtoBad = TestEntities.characterImportanceDtoBuilder();
 
     this.mockMvc.perform(post("/character-importance/")
             .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -117,7 +117,7 @@ class CharacterImportanceControllerTest {
   @Test
   @WithMockUser
   void update__nullId__failure() throws Exception {
-    CharacterImportanceDto dtoWithNullId = TestEntities.characterImportanceDtoCreateBuilder().build();
+    CharacterImportanceDto dtoWithNullId = TestEntities.characterImportanceDtoCreateBuilder();
 
     this.mockMvc.perform(put("/character-importance/")
             .contentType(MediaType.APPLICATION_JSON_VALUE)

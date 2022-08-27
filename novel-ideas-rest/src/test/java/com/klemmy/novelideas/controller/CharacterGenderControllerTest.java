@@ -1,16 +1,5 @@
 package com.klemmy.novelideas.controller;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.klemmy.novelideas.TestEntities;
 import com.klemmy.novelideas.api.CharacterGenderDto;
@@ -27,6 +16,17 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import javax.validation.ConstraintViolationException;
 import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -45,25 +45,25 @@ class CharacterGenderControllerTest {
   @WithMockUser
   void getAll__success() throws Exception {
     List<CharacterGenderDto> dtoList = List.of(
-        TestEntities.characterGenderDtoBuilder().build(),
-        TestEntities.characterGenderDtoBuilder2().build());
+        TestEntities.characterGenderDtoBuilder(),
+        TestEntities.characterGenderDtoBuilder2());
     when(service.loadAll()).thenReturn(dtoList);
 
     this.mockMvc.perform(get("/gender/"))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$[0].id").value(dtoList.get(0).getId()))
-        .andExpect(jsonPath("$[1].id").value(dtoList.get(1).getId()));
+        .andExpect(jsonPath("$[0].id").value(dtoList.get(0).id()))
+        .andExpect(jsonPath("$[1].id").value(dtoList.get(1).id()));
   }
 
   @Test
   @WithMockUser
   void getId__validData__success() throws Exception {
-    CharacterGenderDto dto = TestEntities.characterGenderDtoBuilder().build();
-    when(service.loadGender(dto.getId())).thenReturn(dto);
+    CharacterGenderDto dto = TestEntities.characterGenderDtoBuilder();
+    when(service.loadGender(dto.id())).thenReturn(dto);
 
-    this.mockMvc.perform(get("/gender/" + dto.getId()))
+    this.mockMvc.perform(get("/gender/" + dto.id()))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.id").value(dto.getId()));
+        .andExpect(jsonPath("$.id").value(dto.id()));
   }
 
   @Test
@@ -81,20 +81,20 @@ class CharacterGenderControllerTest {
   @Test
   @WithMockUser
   void create__validData__success() throws Exception {
-    CharacterGenderDto dto = TestEntities.characterGenderDtoCreateBuilder().build();
+    CharacterGenderDto dto = TestEntities.characterGenderDtoCreateBuilder();
     when(service.create(any(CharacterGenderDto.class))).thenReturn(dto);
 
     this.mockMvc.perform(post("/gender/")
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .content(objectMapper.writeValueAsString(dto)))
         .andExpect(status().isCreated())
-        .andExpect(jsonPath("$.id").value(dto.getId()));
+        .andExpect(jsonPath("$.id").value(dto.id()));
   }
 
   @Test
   @WithMockUser
   void create__inValidData__failure() throws Exception {
-    CharacterGenderDto dtoBad = TestEntities.characterGenderDtoBuilder().build();
+    CharacterGenderDto dtoBad = TestEntities.characterGenderDtoBuilder();
 
     this.mockMvc.perform(post("/gender/")
             .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -109,20 +109,20 @@ class CharacterGenderControllerTest {
   @Test
   @WithMockUser
   void update__validData__success() throws Exception {
-    CharacterGenderDto dto = TestEntities.characterGenderDtoBuilder().build();
+    CharacterGenderDto dto = TestEntities.characterGenderDtoBuilder();
     when(service.update(any(CharacterGenderDto.class))).thenReturn(dto);
 
     this.mockMvc.perform(put("/gender/")
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .content(objectMapper.writeValueAsString(dto)))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.id").value(dto.getId()));
+        .andExpect(jsonPath("$.id").value(dto.id()));
   }
 
   @Test
   @WithMockUser
   void update__nullId__failure() throws Exception {
-    CharacterGenderDto dtoWithNullId = TestEntities.characterGenderDtoCreateBuilder().build();
+    CharacterGenderDto dtoWithNullId = TestEntities.characterGenderDtoCreateBuilder();
 
     this.mockMvc.perform(put("/gender/")
             .contentType(MediaType.APPLICATION_JSON_VALUE)

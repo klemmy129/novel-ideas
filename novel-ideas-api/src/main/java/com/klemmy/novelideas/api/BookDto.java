@@ -2,8 +2,10 @@ package com.klemmy.novelideas.api;
 
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.EnumType;
@@ -16,6 +18,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder(toBuilder = true)
 @Schema(description = "Book")
 public class BookDto implements Serializable {
@@ -26,18 +30,18 @@ public class BookDto implements Serializable {
 
   @NotNull(message = "Need a Book Name")
   @Length(max = 255)
-  private final String name;
+  private String name;
 
   @Length(max = 4000)
-  private final String description;
+  private String description;
 
   @Past
-  private final LocalDateTime startDate;
+  private LocalDateTime startDate;
 
   @Enumerated(EnumType.STRING)
   @ArraySchema(schema = @Schema(implementation = BookState.class, description = "BookState"))
-  private final BookState state;
+  private BookState state;
 
   @ArraySchema(schema = @Schema(implementation = CharacterProfileDto.class, description = "Character in Book"))
-  private final List<CharacterProfileDto> characterProfiles;
+  private List<CharacterProfileDto> characterProfiles;
 }

@@ -7,29 +7,35 @@
         <module>novel-ideas-api</module>
         <module>novel-ideas-jpa</module>
         <module>novel-ideas-rest</module>
+        <module>novel-ideas-client-starter</module>
+        <module>novel-ideas-client</module>
+        <module>novel-ideas-autoconfiguration</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.7.1</version>
+        <version>2.7.3</version>
          <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.klemmy</groupId>
     <artifactId>novel-ideas</artifactId>
-    <version>1.0.2</version>
+    <version>1.1.0</version>
     <name>novel-ideas</name>
     <description>Demo project for Spring Boot</description>
 
     <properties>
         <java.version>17</java.version>
 
+        <apache-httpclient.version>4.5.13</apache-httpclient.version>
+        <apache-httpcore.version>4.4.15</apache-httpcore.version>
         <codehaus-helper.version>3.3.0</codehaus-helper.version>
+        <javax-rs-api.version>2.1.1</javax-rs-api.version>
         <junit-launcher.version>1.8.2</junit-launcher.version>
         <modelmapper.version>3.1.0</modelmapper.version>
-        <resource-plugin.version>3.2.0</resource-plugin.version>
-        <spring-boot.version>2.7.1</spring-boot.version>
+        <okhttp.version>4.10.0</okhttp.version>
+        <spring-boot.version>2.7.3</spring-boot.version>
         <springdoc.version>1.6.9</springdoc.version>
-        <swagger-v3.version>2.2.1</swagger-v3.version>
+        <swagger-v3.version>2.2.2</swagger-v3.version>
         <typescript-generator.version>2.36.1070</typescript-generator.version>
     </properties>
 
@@ -48,6 +54,18 @@
             </dependency>
             <dependency>
                 <groupId>com.klemmy</groupId>
+                <artifactId>novel-ideas-autoconfiguration</artifactId>
+                <version>${project.version}</version>
+                <scope>compile</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.klemmy</groupId>
+                <artifactId>novel-ideas-client</artifactId>
+                <version>${project.version}</version>
+                <scope>compile</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.klemmy</groupId>
                 <artifactId>novel-ideas-jpa</artifactId>
                 <version>${project.version}</version>
                 <scope>compile</scope>
@@ -57,6 +75,17 @@
                 <artifactId>novel-ideas-rest</artifactId>
                 <version>${project.version}</version>
                 <scope>compile</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.klemmy</groupId>
+                <artifactId>novel-ideas-starter</artifactId>
+                <version>${project.version}</version>
+                <scope>compile</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.squareup.okhttp3</groupId>
+                <artifactId>okhttp</artifactId>
+                <version>${okhttp.version}</version>
             </dependency>
             <dependency>
                 <groupId>io.swagger.core.v3</groupId>
@@ -73,6 +102,21 @@
                 <groupId>io.swagger.core.v3</groupId>
                 <artifactId>swagger-models</artifactId>
                 <version>${swagger-v3.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>javax.ws.rs</groupId>
+                <artifactId>javax.ws.rs-api</artifactId>
+                <version>${javax-rs-api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.httpcomponents</groupId>
+                <artifactId>httpclient</artifactId>
+                <version>${apache-httpclient.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.httpcomponents</groupId>
+                <artifactId>httpcore</artifactId>
+                <version>${apache-httpcore.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.flywaydb</groupId>
@@ -93,6 +137,11 @@
                 <groupId>org.springdoc</groupId>
                 <artifactId>springdoc-openapi-ui</artifactId>
                 <version>${springdoc.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-configuration-processor</artifactId>
+                <version>${spring-boot.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework.boot</groupId>

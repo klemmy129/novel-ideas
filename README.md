@@ -9,16 +9,56 @@
 ![GitHub issues](https://img.shields.io/github/issues/klemmy129/novel-ideas)
 
 ## Description  
-This application is Rest backend is for managing data and information about a novel or script you want to write.
+This application is Rest backend for managing data and information about a novel or script you want to write.
 
 This is also a Java Spring Boot demonstrator for a Rest application.
 
-The frontend Demo to this application is [novel-ideas-iu](https://github.com/klemmy129/novel-ideas-ui) an Angular 13 application.
+I have also created a second Java Spring Boot demonstrator [novel-ghostwriter](https://github.com/klemmy129/novel-ghostwriter), 
+this is used to show how to a http client communicates with novel-idears and (SOON) AMPQ events. 
 
-### Technology Used
+The frontend Demo to this application is [novel-ideas-iu](https://github.com/klemmy129/novel-ideas-ui) an Angular 14 application.
+
+## Table of Contents
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+- [Technology Used](#technology-used)
+- [Building](#building)
+  - [For Oracle](#for-oracle)
+  - [For PostgreSQL](#for-postgresql)
+  - [For H2](#for-h2)
+  - [For Docker](#for-docker)
+- [Startup](#startup)
+  - [Active Profiles](#active-profiles)
+  - [Environment Variables](#environment-variables)
+    - [application-default.yml](#application-defaultyml)
+    - [application-oracle.yml](#application-oracleyml)
+    - [application-postgres.yml](#application-postgresyml)
+- [Coding Demo Explained](#coding-demo-explained)
+  - [Why Maven Modules](#why-maven-modules)
+    - [novel-ideas-api](#novel-ideas-api)
+    - [novel-ideas-client](#novel-ideas-client)
+    - [novel-ideas-autoconfig](#novel-ideas-autoconfig)
+    - [novel-ideas-client-starter](#novel-ideas-client-starter)
+    - [Using the artifacts in another application](#using-the-artifacts-in-another-application)
+  - [Constructor-based Dependency Injection](#constructor-based-dependency-injection)
+  - [Enum](#enum)
+  - [JPA Specification](#jpa-specification)
+  - [Paging](#paging)
+  - [Swagger](#swagger)
+  - [Java Record vs Lombok](#java-record-vs-lombok)
+  - [Validation](#validation)
+  - [Authorisation](#authorisation)
+  - [Auditing](#auditing)
+  - [Unit Testing](#unit-testing)
+- [Other Stuff](#other-stuff)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+## Technology Used
 - Java 17
 - Maven
-- Spring Boot 2.7.1
+- Spring Boot 2.7.3
 - JPA/Hibernate
 - FlyWay
   - Oracle 18c XE
@@ -31,23 +71,28 @@ The frontend Demo to this application is [novel-ideas-iu](https://github.com/kle
 - [Certificates](CERTS.md)
 
 ## Building
-Note: The Oracle and Postgres builds both can run with the H2 profile
+
+**Note:** 
+* The Oracle and Postgres builds both can run with the H2 profile
+* You can use `package` instead of `install`, if you are not running [novel-ghostwriter](https://github.com/klemmy129/novel-ghostwriter).
+
 ### For Oracle
 ```
-mvn clean package
+mvn clean install
 ```
 ### For PostgreSQL
 ```
-mvn clean package -P postgres
+mvn clean install -P postgres
 ```
 ### For H2
 ```
-mvn clean package -P h2
+mvn clean install -P h2
 ```
 ### For Docker
 _COMING SOON_
 
 ## Startup
+
 ### Active Profiles
 * Oracle
 `default,oracle`
@@ -74,17 +119,50 @@ _COMING SOON_
 - DB_USERNAME _default novel_
 - DB_PASSWORD _default novel1_
 
-
-## Why Maven Modules
-### NOVEL-IDEAS-API
-The reason I broke up the application so that it has an API module, is so I can share the DTO's
+## Coding Demo Explained
+### Why Maven Modules
+#### novel-ideas-api
+The reason I broke up the application so that it has an API module is, so I can share the DTO's
 of this application with other developers. 
 So they have access to my classes.
 
 In the API's `pom.xml` the build plugins I configured to build a typescript module of the DTO classes for a NPM package.
 This will help with front-end development.
 
-## Coding Sample Explained - WIP
+#### novel-ideas-client
+I added novel-ideas-client module, but I could have just added the client class into the novel-ideas-api module.
+This client would be used in other Java applications. 
+This Class would have a handful of methods that would call the rest endpoint URL, properly formatted. 
+Making it easier for the developer. I put a small sample [NovelIdeasClient](novel-ideas-client/src/main/java/com/klemmy/novelideas/client/NovelIdeasClient.java). 
+
+#### novel-ideas-autoconfig
+This module all the beans needed to start the client in another Java application like [novel-ghostwriter](https://github.com/klemmy129/novel-ghostwriter) 
+The Property and Configuration classes used with the client are using multiple annotations:
+
+**Used by Property Class/Record**
+* `@ConfigurationProperties(prefix = "server.ssl")` This is used populate the class or record with config data in your yaml file based on the prefix.
+* `@ConstructorBinding` Is used in property classes to indicate that configuration properties should be bound using constructor arguments rather than by calling setters. As I'm using a record this is needed. Java `record` don't have setters.
+
+**Used by Configuration Classes**
+* `@Configuration` classes can contain bean definition methods that are annotated with `@Bean`
+* `@EnableConfigurationProperties(SslProperties.class)` This binds the property POJO class/record.
+* `@ConditionalOnProperty(name = "novel-ideas.url")` This will load the Bean if true. These other two element can also be useful `matchIfMissing` or `haveingValue`. There are many @Conditional*xxxx* annotations.
+* `@Bean(name="ssl")` When you have multiple bean that will load and do similar functionality, you have to name them. 
+* `@Qualifier("ssl")` I have 2x Beans could be used as `RestTemplate` bean, so I have named them, the `@Qualifier` specifies which one to use. 
+* `@DependsOn("ssl")` Bean creation can you unpredictable, this is one way you can make sure your bean has what it needs to create itself. 
+
+#### novel-ideas-client-starter
+Just a `pom.xml` that you would include in another Java application that you are setting up the client to call this application.
+
+#### Using the artifacts in another application
+For another Java application to use is, they would:
+1. Add the novel-idea-api to you POM file (or novel-idea-autoconfig which loads the novel-idea-client and novel-idea-api if the autoconfig condition were met).
+2. NovelIdeasClient requires 2x parameters:
+   1. Base URL: Of the running Novel-ideas-rest application. I would load this via a property class referring to a yaml property file.
+   2. RestTemplate: This class could be very simple or more complex like, load certificates to call it via https, adding header, OAuth2, etc.
+3. Then write a spring `@Configuration` class to create an instance of the client.
+
+
 ### Constructor-based Dependency Injection
 I use Constructor-based Dependency Injection over Spring's `@Autowire`
 
@@ -143,11 +221,15 @@ I have used them a filter from a Controllers inputs. Note you can have no fields
 ### Paging
 I have examples of how simple paging is from Controller to Service to Repository.
 
-I have also given examples on how I configured them in swagger eg 
+I have also given examples on how I configured them in swagger e.g. 
 [BookController](novel-ideas-rest/src/main/java/com/klemmy/novelideas/controller/BookController.java).
 
+In the [NovelIdeasClient](novel-ideas-client/src/main/java/com/klemmy/novelideas/client/NovelIdeasClient.java) 
+I could not use the interface `Page` or the class `PageImpl` as it contains no default constructors. 
+This is a problem when Jackson is trying to deserialize class. So I extended `PageImpl`and created [RestPage](novel-ideas-api/src/main/java/com/klemmy/novelideas/util/RestPage.java). It is not pretty but it works in the client. 
+
 ### Swagger
-I have used SpringDocs in this demo, in other project in the passed I have used SpringFox, but SpringFox does not seem to being actively updated and maintained.
+I have used SpringDocs in this demo, in other project in the past I have used SpringFox, but SpringFox does not seem to being actively updated and maintained.
 
 SpringDocs supports OpenApi standard 3. 
 
@@ -157,6 +239,37 @@ Some examples I'll point too:
 - [BookController](novel-ideas-rest/src/main/java/com/klemmy/novelideas/controller/BookController.java) - Controller
 - [NovelIdeasApplication](novel-ideas-rest/src/main/java/com/klemmy/novelideas/NovelIdeasApplication.java) - the application startup
 - [BookDto](novel-ideas-api/src/main/java/com/klemmy/novelideas/api/BookDto.java) - Dto Model
+
+### Java Record vs Lombok
+I'm not a fan of a lot of boiler-plating code.
+
+This is where Lombok's annotations helps with this.
+
+Making the code look cleaner and more readable.
+
+I personally love how Lombok's helps with this. I'm a fan of:
+- @Getters
+- @Setters
+- @Builder
+- @AllArgsConstructor
+- @NoArgsConstructor
+
+But, the Java community is uncertain about Lomboks future. 
+
+Java 14 released a new type called: `record`.
+
+From what I can see in the community, Java's `record` looks suitable for small immutable classes. 
+But, I believe Lombok is still the best option, at this time, for large complex DTOs.
+
+So I have converted 2x small simple DTOs from Lombok's annotations to Java's`record`
+- [CharacterGenderDto](novel-ideas-api/src/main/java/com/klemmy/novelideas/api/CharacterGenderDto.java)
+- [CharacterImportanceDto](novel-ideas-api/src/main/java/com/klemmy/novelideas/api/CharacterImportanceDto.java)
+
+This change had flow-on effect throughout the code, especially factorys and unit tests.
+
+And here are some Property files
+- [NovelIdeasClientProperties](novel-ideas-autoconfiguration/src/main/java/com/klemmy/novelideas/config/NovelIdeasClientProperties.java)
+- [SslProperties](novel-ideas-autoconfiguration/src/main/java/com/klemmy/novelideas/config/SslProperties.java)
 
 ### Validation
 _COMING SOON_

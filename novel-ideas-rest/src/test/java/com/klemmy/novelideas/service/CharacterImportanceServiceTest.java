@@ -58,7 +58,7 @@ class CharacterImportanceServiceTest {
 
         CharacterImportanceDto result = service.loadCharacterImportance(TestEntities.GENERIC_ID);
 
-        assertThat(result.getImportance()).isEqualTo(TestEntities.GENERIC_VALUE);
+        assertThat(result.importance()).isEqualTo(TestEntities.GENERIC_VALUE);
     }
 
     @Test
@@ -72,14 +72,14 @@ class CharacterImportanceServiceTest {
 
     @Test
     void create__validData__success() {
-        CharacterImportanceDto create = TestEntities.characterImportanceDtoCreateBuilder().build();
+        CharacterImportanceDto create = TestEntities.characterImportanceDtoCreateBuilder();
         CharacterImportance characterImportance = TestEntities.characterImportanceBuilder().build();
         when(repository.save(any(CharacterImportance.class))).thenReturn(characterImportance);
 
         CharacterImportanceDto result = service.create(create);
 
-        assertThat(result.getImportance()).isEqualTo(create.getImportance());
-        assertThat(result.getId()).isEqualTo(TestEntities.GENERIC_ID);
+        assertThat(result.importance()).isEqualTo(create.importance());
+        assertThat(result.id()).isEqualTo(TestEntities.GENERIC_ID);
         verify(repository).save(any(CharacterImportance.class));
     }
 

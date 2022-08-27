@@ -8,17 +8,16 @@ import org.springframework.stereotype.Component;
 public class CharacterGenderFactory {
 
   public static CharacterGenderDto toDTO(CharacterGender entity) {
-    return CharacterGenderDto.builder()
-        .id(entity.getId())
-        .gender(entity.getGender())
-        .isDeleted(entity.isDeleted())
-        .build();
+    return new CharacterGenderDto(
+        entity.getId(),
+        entity.getGender(),
+        entity.isDeleted());
   }
 
   public static CharacterGender toEntity(CharacterGenderDto dto) {
     return CharacterGender.builder()
-        .id(dto.getId())
-        .gender(dto.getGender())
+        .id(dto.id())
+        .gender(dto.gender())
         .isDeleted(dto.isDeleted())
         .build();
   }
