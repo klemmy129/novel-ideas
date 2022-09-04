@@ -47,13 +47,13 @@ public class CharacterGenderService {
 
   @Validated(OnUpdate.class)
   public CharacterGenderDto update(@Valid CharacterGenderDto characterGenderDto) throws FindDataException {
-    Optional<CharacterGender> gender = characterGenderRepository.findById(characterGenderDto.getId());
+    Optional<CharacterGender> gender = characterGenderRepository.findById(characterGenderDto.id());
     if (gender.isPresent()) {
       CharacterGender updatedCharacterGender = CharacterGenderFactory.toEntity(characterGenderDto);
       return CharacterGenderFactory.toDTO(characterGenderRepository.save(updatedCharacterGender));
     } else {
       throw new FindDataException(
-          String.format("Could not find Gender with id:%d, to update.", characterGenderDto.getId()));
+          String.format("Could not find Gender with id:%d, to update.", characterGenderDto.id()));
     }
 
   }

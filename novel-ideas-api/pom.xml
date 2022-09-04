@@ -6,7 +6,7 @@
     <parent>
         <groupId>com.klemmy</groupId>
         <artifactId>novel-ideas</artifactId>
-        <version>1.0.2</version>
+        <version>1.1.0</version>
     </parent>
 
     <artifactId>novel-ideas-api</artifactId>
@@ -32,6 +32,10 @@
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-ui</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-commons</artifactId>
         </dependency>
     </dependencies>
     <build>
@@ -87,7 +91,6 @@
             </plugin>
             <plugin>
                 <artifactId>maven-resources-plugin</artifactId>
-                <version>${resource-plugin.version}</version>
                 <executions>
                     <execution>
                         <id>copy-resources</id>
