@@ -34,6 +34,11 @@ The frontend Demo to this application is [novel-ideas-iu](https://github.com/kle
     - [application-default.yml](#application-defaultyml)
     - [application-oracle.yml](#application-oracleyml)
     - [application-postgres.yml](#application-postgresyml)
+  - [Running it](#running-it)
+  - [Viewing it](#viewing-it)
+    - [Swagger](#swagger)
+    - [Novel-Ideas-UI (Draft)](#novel-ideas-ui-draft)
+    - [Actuator](#actuator)
 - [Coding Demo Explained](#coding-demo-explained)
   - [Why Maven Modules](#why-maven-modules)
     - [novel-ideas-api](#novel-ideas-api)
@@ -45,7 +50,7 @@ The frontend Demo to this application is [novel-ideas-iu](https://github.com/kle
   - [Enum](#enum)
   - [JPA Specification](#jpa-specification)
   - [Paging](#paging)
-  - [Swagger](#swagger)
+  - [Swagger annotations](#swagger-annotations)
   - [Java Record vs Lombok](#java-record-vs-lombok)
   - [Validation](#validation)
   - [Authorisation](#authorisation)
@@ -56,9 +61,10 @@ The frontend Demo to this application is [novel-ideas-iu](https://github.com/kle
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## Technology Used
+Note: All sample paths in this project are using Linux base.
 - Java 17
 - Maven
-- Spring Boot 2.7.3
+- Spring Boot 2.7.4
 - JPA/Hibernate
 - FlyWay
   - Oracle 18c XE
@@ -118,6 +124,42 @@ _COMING SOON_
 - DB_URL _default jdbc:postgresql://localhost:5432/postgres_
 - DB_USERNAME _default novel_
 - DB_PASSWORD _default novel1_
+
+### Running it
+I normally run it up in my IDE. eg Intellij or VSCode
+
+or command line eg: `java -jar -Dspring.profiles.active=default,oracle ./novel-ideas-rest/target/novel-ideas-rest-1.1.0.jar`
+
+and you will need to define your system's environment variables, from the above section.
+
+
+### Viewing it
+#### Swagger
+In a Web browser: 
+* Address based on the CERT URL you created:
+https://servername.devstuff.org:10443/swagger-ui/index.html or
+* Local address:
+https://localhost:10443/swagger-ui/index.html
+
+#### Novel-Ideas-UI (Draft)
+The frontend Demo to this application is [novel-ideas-iu](https://github.com/klemmy129/novel-ideas-ui) an Angular application. (I have not done much)
+
+#### Actuator
+I'm not going to go into Spring Boot Actuators.
+
+Here is a very simple example: https://localhost:10443/actuator/health/
+
+That should report:
+```
+{
+"status": "UP"
+}
+```
+
+You can configure many more, but be warned, think of security.
+
+Spring Boot Actuators documentation: https://docs.spring.io/spring-boot/docs/2.7.4/reference/html/actuator.html#actuator.enabling
+
 
 ## Coding Demo Explained
 ### Why Maven Modules
@@ -228,7 +270,7 @@ In the [NovelIdeasClient](novel-ideas-client/src/main/java/com/klemmy/novelideas
 I could not use the interface `Page` or the class `PageImpl` as it contains no default constructors. 
 This is a problem when Jackson is trying to deserialize class. So I extended `PageImpl`and created [RestPage](novel-ideas-api/src/main/java/com/klemmy/novelideas/util/RestPage.java). It is not pretty but it works in the client. 
 
-### Swagger
+### Swagger annotations
 I have used SpringDocs in this demo, in other project in the past I have used SpringFox, but SpringFox does not seem to being actively updated and maintained.
 
 SpringDocs supports OpenApi standard 3. 
