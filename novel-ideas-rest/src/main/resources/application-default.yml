@@ -24,6 +24,21 @@ info:
   app:
     # Get the version from the POM file and injected into SpringDoc Info
     version: @project.version@
+management:
+  endpoints:
+    probes:
+      enabled: true
+    web:
+      exposure:
+        include:
+          - health
+          - info
+  health:
+    livenessstate:
+      enabled: true
+    readinessstate:
+      enabled: true
+
 springdoc:
   swagger-ui:
     #For sorting endpoints alphabetically
