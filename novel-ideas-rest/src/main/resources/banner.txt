@@ -1,0 +1,14 @@
+${AnsiBackground.BLACK}
+${Ansi.BLUE}                                        ,,                  ,,
+${Ansi.BLUE} `7MN.   `7MF'                         `7MM      `7MMF'    `7MM
+${Ansi.BLUE}   MMN.    M                             MM        MM        MM
+${Ansi.BLUE}   M YMb   M  ,pW"Wq.`7M'   `MF'.gP"Ya   MM        MM   ,M""bMM  .gP"Ya   ,6"Yb.  ,pP"Ybd
+${Ansi.BLUE}   M  `MN. M 6W'   `Wb VA   ,V ,M'   Yb  MM        MM ,AP    MM ,M'   Yb 8)   MM  8I   `"
+${Ansi.BLUE}   M   `MM.M 8M     M8  VA ,V  8M""""""  MM        MM 8MI    MM 8M""""""  ,pm9MM  `YMMMa.
+${Ansi.BLUE}   M     YMM YA.   ,A9   VVV   YM.    ,  MM        MM `Mb    MM YM.    , 8M   MM  L.   I8
+${Ansi.BLUE} .JML.    YM  `Ybmd9'     W     `Mbmmd'.JMML.    .JMML.`Wbmd"MML.`Mbmmd' `Moo9^Yo.M9mmmP'
+${Ansi.RED} =========================================================================================
+${Ansi.GREEN} ::   ${spring.application.name} (${info.app.version})                                                            ::
+${Ansi.GREEN} ::   Spring Boot ${spring-boot.formatted-version}                                                             :: ${Ansi.DEFAULT}
+
+${AnsiStyle.NORMAL}

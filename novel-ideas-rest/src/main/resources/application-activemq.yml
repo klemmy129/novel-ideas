@@ -1,0 +1,4 @@
+message-bus:
+  type: activemq
+  broker-url: tcp://localhost:61616
+  topic: demo.book

@@ -1,18 +1,19 @@
 package com.klemmy.novelideas.service;
 
 import com.klemmy.novelideas.TestEntities;
+import com.klemmy.novelideas.api.BookDto;
 import com.klemmy.novelideas.api.BookState;
 import com.klemmy.novelideas.api.CharacterProfileDto;
-import com.klemmy.novelideas.api.BookDto;
-import com.klemmy.novelideas.dto.CharacterProfileFactory;
 import com.klemmy.novelideas.dto.BookFactory;
+import com.klemmy.novelideas.dto.CharacterProfileFactory;
 import com.klemmy.novelideas.error.FindDataException;
 import com.klemmy.novelideas.jpa.Book;
 import com.klemmy.novelideas.jpa.CharacterProfile;
 import com.klemmy.novelideas.jpa.repository.BookRepository;
+import com.klemmy.novelideas.producer.MessageBus;
+import com.klemmy.novelideas.producer.NoMessageBuss;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -37,10 +38,11 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 class BookServiceTest {
-  @Mock
-  BookRepository repository = mock(BookRepository.class);
 
-  private final BookService service = new BookService(repository);
+  BookRepository repository = mock(BookRepository.class);
+  MessageBus messageBus = mock(NoMessageBuss.class);
+
+  private final BookService service = new BookService(repository, messageBus);
 
   @Test
   void loadAll__noParams__success() {

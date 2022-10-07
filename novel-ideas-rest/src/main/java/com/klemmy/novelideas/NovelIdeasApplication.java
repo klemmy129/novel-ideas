@@ -4,7 +4,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
-@SpringBootApplication
+@SpringBootApplication( scanBasePackages = {"com.klemmy.novelideas"})
 @EnableJpaRepositories(basePackages = "com.klemmy.novelideas.jpa")
 public class NovelIdeasApplication {
 
