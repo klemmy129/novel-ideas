@@ -27,11 +27,16 @@ The frontend Demo to this application is [novel-ideas-iu](https://github.com/kle
   - [For Oracle](#for-oracle)
   - [For PostgreSQL](#for-postgresql)
   - [For H2](#for-h2)
+  - [Message Bus](#message-bus)
+    - [ActiveMQ](#activemq)
+      - [Setup](#setup)
+    - [RabbitMQ](#rabbitmq)
+    - [Kafka](#kafka)
   - [For Docker](#for-docker)
 - [Startup](#startup)
   - [Active Profiles](#active-profiles)
   - [Environment Variables](#environment-variables)
-    - [application-default.yml](#application-defaultyml)
+    - [application.yml](#applicationyml)
     - [application-oracle.yml](#application-oracleyml)
     - [application-postgres.yml](#application-postgresyml)
   - [Running it](#running-it)
@@ -52,6 +57,8 @@ The frontend Demo to this application is [novel-ideas-iu](https://github.com/kle
   - [Paging](#paging)
   - [Swagger annotations](#swagger-annotations)
   - [Java Record vs Lombok](#java-record-vs-lombok)
+  - [Message Bus](#message-bus-1)
+  - [Banner](#banner)
   - [Validation](#validation)
   - [Authorisation](#authorisation)
   - [Auditing](#auditing)
@@ -70,6 +77,7 @@ Note: All sample paths in this project are using Linux base.
   - Oracle 18c XE
   - Postgres 13
   - H2
+- ActiveMQ 5 (Classic)
 - JUnit 5
 - AssertJ
 - Spring Docs
@@ -94,6 +102,20 @@ mvn clean install -P postgres
 ```
 mvn clean install -P h2
 ```
+### Message Bus
+#### ActiveMQ
+##### Setup
+1. Download ActiveMQ binary from https://activemq.apache.org/download.html
+2. Uncompress the file
+3. For Linux Open a terminal and goto ActiveMQ -> bin
+4. To start ActiveMQ run `./activemq start`
+
+#### RabbitMQ
+_COMING SOON_
+
+#### Kafka
+_COMING SOON_
+
 ### For Docker
 _COMING SOON_
 
@@ -101,14 +123,17 @@ _COMING SOON_
 
 ### Active Profiles
 * Oracle
-`default,oracle`
+`oracle`
 * PostgreSQL
- `default,postgres`
+ `postgres`
 * H2
-`default,h2`
+`h2`
+* ActiveMQ `activemq`
+
+Eg `oracle,activemq`
 
 ### Environment Variables
-#### application-default.yml
+#### application.yml
 - PORT _default 10443_
 - TRUSTSTORE _default /home/${user}/certs/truststore.p12_
 - TRUSTSTORE-PASSWORD
@@ -128,10 +153,9 @@ _COMING SOON_
 ### Running it
 I normally run it up in my IDE. eg Intellij or VSCode
 
-or command line eg: `java -jar -Dspring.profiles.active=default,oracle ./novel-ideas-rest/target/novel-ideas-rest-1.1.0.jar`
+or command line eg: `java -jar -Dspring.profiles.active=oracle,activemq ./novel-ideas-rest/target/novel-ideas-rest-1.1.0.jar`
 
 and you will need to define your system's environment variables, from the above section.
-
 
 ### Viewing it
 #### Swagger
@@ -312,6 +336,42 @@ This change had flow-on effect throughout the code, especially factorys and unit
 And here are some Property files
 - [NovelIdeasClientProperties](novel-ideas-autoconfiguration/src/main/java/com/klemmy/novelideas/config/NovelIdeasClientProperties.java)
 - [SslProperties](novel-ideas-autoconfiguration/src/main/java/com/klemmy/novelideas/config/SslProperties.java)
+
+### Message Bus
+Novel-Ideas is the producer for a message bus and [novel-ghostwriter](https://github.com/klemmy129/novel-ghostwriter) is the consumer of the messages off the bus and displays it to the console. 
+
+By default, I have set `message-bus:type: none` which will load a dummy stub bean.
+I made it an auto-configurable to be able to be a "producer" and put messages on the message bus,
+by adding `activemq` to the profile. This sets `message-bus:type: activemq`. It also has the broker URL and the topic name.
+
+I used a property and configure classes to load and setup a Connection Factory and  JMS template.
+I then setup an interface called `MessageBus` that is implemented on the dummy stub that does nothing and the other will put messages on the bus.
+The `messageBus` interface is loaded in the `BookService` as a construction parameter.
+
+It is triggered by calling the Rest endpoint: Get `/book/{id}`
+
+### Banner
+
+I create a custom banner file, named `banner.txt` in the `src/main/resources` with the yaml files.
+
+Note banner.txt is the default expected banner file name, which Spring Boot uses. 
+However, if we want to choose any other location or another name for the banner, 
+we need to set the spring.banner.location property in the `application.yml` file:
+```
+banner:
+  location: classpath:/path/mybanner.txt
+```
+
+There are many ASCII Art Generator's out there. 
+
+I used (first one I clicked): http://patorjk.com/software/taag/#p=display&f=Big%20Money-ne&t=Type%20Something%20
+
+Others:
+- https://devops.datenkollektiv.de/banner.txt/index.html
+- http://www.network-science.de/ascii/
+- https://textkool.com/en/ascii-art-generator?hl=default&vl=default&font=Mike&text=stacktraceguru
+
+You can also use an image as the banner eg `banner.gif` Search web for more info on this.
 
 ### Validation
 _COMING SOON_

@@ -1,14 +1,15 @@
 package com.klemmy.novelideas.service;
 
+import com.klemmy.novelideas.api.BookDto;
 import com.klemmy.novelideas.api.BookState;
 import com.klemmy.novelideas.api.CharacterProfileDto;
-import com.klemmy.novelideas.api.BookDto;
-import com.klemmy.novelideas.dto.CharacterProfileFactory;
 import com.klemmy.novelideas.dto.BookFactory;
+import com.klemmy.novelideas.dto.CharacterProfileFactory;
 import com.klemmy.novelideas.error.FindDataException;
 import com.klemmy.novelideas.jpa.Book;
 import com.klemmy.novelideas.jpa.CharacterProfile;
 import com.klemmy.novelideas.jpa.repository.BookRepository;
+import com.klemmy.novelideas.producer.MessageBus;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -29,6 +30,8 @@ public class BookService {
 
   private final BookRepository bookRepository;
 
+  private final MessageBus messageBus;
+
   public Page<BookDto> loadAll(String queryTitle, LocalDateTime startDate, LocalDateTime endDate,
                                Set<BookState> state, Pageable pageable) {
     return bookRepository.findAllByFilters(queryTitle, startDate, endDate, state, pageable)
@@ -37,8 +40,10 @@ public class BookService {
 
   public BookDto loadBook(Integer id) throws FindDataException {
     Optional<Book> book = bookRepository.findById(id);
-    return BookFactory.toDTO(book.orElseThrow(
+    BookDto bookDto = BookFactory.toDTO(book.orElseThrow(
         () -> new FindDataException(String.format(MSG, id, "."))));
+    messageBus.sendMessage(bookDto);
+    return bookDto;
   }
 
   public BookDto create(BookDto bookDto) {
