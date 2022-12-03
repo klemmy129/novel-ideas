@@ -1,6 +1,9 @@
 spring:
   application:
     name: novel-ideas-v1
+  mvc:
+    problemdetails:
+      enabled: true
 info:
   app:
     # Get the version from the POM file and injected into SpringDoc Info
@@ -53,3 +56,4 @@ springdoc:
     operationsSorter: alpha
     #For sorting tags alphabetically
     tagsSorter: alpha
+

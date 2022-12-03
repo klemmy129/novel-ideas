@@ -13,7 +13,6 @@ import org.springframework.stereotype.Repository;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import static org.springframework.data.jpa.domain.Specification.where;
 
@@ -27,7 +26,7 @@ public interface BookRepository extends JpaRepository<Book, Integer>, JpaSpecifi
   default Page<Book> findAllByFilters(final String queryTitle,
                                       final LocalDateTime startDate,
                                       final LocalDateTime endDate,
-                                      final Set<BookState> state,
+                                      final BookState state,
                                       final Pageable page) {
     return findAll(where(FilterBookSpecification.isLikeTitle(queryTitle))
         .and(FilterBookSpecification.isBetweenDate(startDate, endDate))

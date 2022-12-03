@@ -19,6 +19,9 @@ spring:
     driverClassName: org.h2.Driver
   flyway:
     enabled: false
+  mvc:
+    problemdetails:
+      enabled: true
 
 info:
   app:

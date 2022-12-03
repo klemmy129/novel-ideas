@@ -28,8 +28,9 @@ The frontend Demo to this application is [novel-ideas-iu](https://github.com/kle
   - [For PostgreSQL](#for-postgresql)
   - [For H2](#for-h2)
   - [Message Bus](#message-bus)
-    - [ActiveMQ](#activemq)
+    - [ActiveMQ Artemis](#activemq-artemis)
       - [Setup](#setup)
+      - [Info](#info)
     - [RabbitMQ](#rabbitmq)
     - [Kafka](#kafka)
   - [For Docker](#for-docker)
@@ -59,6 +60,7 @@ The frontend Demo to this application is [novel-ideas-iu](https://github.com/kle
   - [Java Record vs Lombok](#java-record-vs-lombok)
   - [Message Bus](#message-bus-1)
   - [Banner](#banner)
+  - [Error Handling](#error-handling)
   - [Validation](#validation)
   - [Authorisation](#authorisation)
   - [Auditing](#auditing)
@@ -69,15 +71,15 @@ The frontend Demo to this application is [novel-ideas-iu](https://github.com/kle
 
 ## Technology Used
 Note: All sample paths in this project are using Linux base.
-- Java 17
+- Java 19
 - Maven
-- Spring Boot 2.7.4
+- Spring Boot 3.0.2
 - JPA/Hibernate
 - FlyWay
-  - Oracle 18c XE
+  - Oracle 21c XE
   - Postgres 13
   - H2
-- ActiveMQ 5 (Classic)
+- ActiveMQ 6 (Artemis)
 - JUnit 5
 - AssertJ
 - Spring Docs
@@ -103,12 +105,20 @@ mvn clean install -P postgres
 mvn clean install -P h2
 ```
 ### Message Bus
-#### ActiveMQ
+#### ActiveMQ Artemis
 ##### Setup
-1. Download ActiveMQ binary from https://activemq.apache.org/download.html
-2. Uncompress the file
-3. For Linux Open a terminal and goto ActiveMQ -> bin
-4. To start ActiveMQ run `./activemq start`
+1. Download ActiveMQ Artemis binary from https://activemq.apache.org/download.html
+2. Uncompress the file. I recommend `/opt` and set `${ARTEMIS_HOME}` to the base path.
+3. Then in a terminal you need to create a broker. It will ask for a password
+```agsl
+cd /var/lib
+${ARTEMIS_HOME}/bin/artemis create mybroker
+```
+##### Info
+- To Start: `/var/lib/mybroker/bin/artemis run`
+- To Stop" `/var/lib/mybroker/bin/artemis stop`
+- Web Management Console: http://localhost:8161/console/auth/login
+- Documentation I used was: https://activemq.apache.org/components/artemis/documentation/latest/
 
 #### RabbitMQ
 _COMING SOON_
@@ -371,7 +381,22 @@ Others:
 - http://www.network-science.de/ascii/
 - https://textkool.com/en/ascii-art-generator?hl=default&vl=default&font=Mike&text=stacktraceguru
 
-You can also use an image as the banner eg `banner.gif` Search web for more info on this.
+Spring Boot 3.0+ no longer supports image types.
+
+### Error Handling
+For my RestControllers Error handling I have [ErrorController](novel-ideas-rest/src/main/java/com/klemmy/novelideas/controller/error/ErrorController.java) that I have annotated with `@RestControllerAdvice`
+
+In here I register the error classes I with to handle by annotating `@ExceptionHandler` and the error class I'm intercepting.
+
+Spring Boot 3.0+ has introduced a Problem Details class for HTTP APIs, this implements [RFC 7807](https://www.rfc-editor.org/rfc/rfc7807) specification. In simple terms is defines a common error format that is flexible.
+
+So I have changed my error data handling of to `ProblemDetails`. This allowed me to delete 2x API classes I created: `ValidationErrorResponse` and `Violation`.
+
+What I like about this new class was I could create more fields/properties to help describe to problem better, with the method `setProperty(String name, Object value)`
+
+You could also set the type. Which is URI to a page to explain the error in more detail.
+
+I also created my own Error exception class [FindDataException](novel-ideas-api/src/main/java/com/klemmy/novelideas/error/FindDataException.java), this extends the `Exception` class. 
 
 ### Validation
 _COMING SOON_

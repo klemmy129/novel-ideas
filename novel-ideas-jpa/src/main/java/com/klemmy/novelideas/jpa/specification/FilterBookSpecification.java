@@ -20,9 +20,9 @@ public class FilterBookSpecification {
         criteriaBuilder.like(criteriaBuilder.lower(root.get("name")), "%" + query.toLowerCase() + "%");
   }
 
-  public Specification<Book> hasState(final Set<BookState> state) {
+  public Specification<Book> hasState(final BookState state) {
 
-    if (state == null || state.isEmpty()) {
+    if (state == null) {
       return (root, criteriaQuery, criteriaBuilder) -> null;
     }
     return (root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.equal(

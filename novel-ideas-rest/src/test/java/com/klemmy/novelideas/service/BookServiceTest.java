@@ -11,7 +11,7 @@ import com.klemmy.novelideas.jpa.Book;
 import com.klemmy.novelideas.jpa.CharacterProfile;
 import com.klemmy.novelideas.jpa.repository.BookRepository;
 import com.klemmy.novelideas.producer.MessageBus;
-import com.klemmy.novelideas.producer.NoMessageBuss;
+import com.klemmy.novelideas.producer.NoMessageBus;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.data.domain.Page;
@@ -40,7 +40,7 @@ import static org.mockito.Mockito.when;
 class BookServiceTest {
 
   BookRepository repository = mock(BookRepository.class);
-  MessageBus messageBus = mock(NoMessageBuss.class);
+  MessageBus messageBus = mock(NoMessageBus.class);
 
   private final BookService service = new BookService(repository, messageBus);
 
@@ -63,7 +63,7 @@ class BookServiceTest {
     Page<Book> booksPaged = new PageImpl<>(books);
     LocalDateTime oneMonthEarlier = TestEntities.PAST_DATETIME.minusMonths(1);
     LocalDateTime oneMonthLater = TestEntities.PAST_DATETIME.plusMonths(1);
-    Set<BookState> state = Collections.singleton(BookState.ACTIVE);
+    BookState state = BookState.ACTIVE;
 
     when(repository.findAllByFilters(eq(TestEntities.GENERIC_VALUE), eq(oneMonthEarlier), eq(oneMonthLater),
         eq(state), any(Pageable.class))).thenReturn(booksPaged);

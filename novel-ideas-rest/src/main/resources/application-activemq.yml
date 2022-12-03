@@ -2,3 +2,9 @@ message-bus:
   type: activemq
   broker-url: tcp://localhost:61616
   topic: demo.book
+spring:
+  artemis:
+    broker-url: tcp://localhost:9876
+    mode: native
+    embedded:
+      topics: demo.book

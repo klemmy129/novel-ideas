@@ -8,11 +8,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Null;
-import javax.validation.constraints.Past;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Null;
+import jakarta.validation.constraints.Past;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -39,7 +39,7 @@ public class BookDto implements Serializable {
   private LocalDateTime startDate;
 
   @Enumerated(EnumType.STRING)
-  @ArraySchema(schema = @Schema(implementation = BookState.class, description = "BookState"))
+  @Schema
   private BookState state;
 
   @ArraySchema(schema = @Schema(implementation = CharacterProfileDto.class, description = "Character in Book"))

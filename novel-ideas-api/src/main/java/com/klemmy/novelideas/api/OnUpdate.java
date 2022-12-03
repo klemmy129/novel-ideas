@@ -1,6 +1,6 @@
 package com.klemmy.novelideas.api;
 
-import javax.validation.groups.Default;
+import jakarta.validation.groups.Default;
 
 public interface OnUpdate extends Default {
 }
