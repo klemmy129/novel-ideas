@@ -18,7 +18,7 @@ openssl genrsa -out devcert.key 2048
 
 ### Create CSR for CA
 ```
-openssl req -new -key devcert.key -out devcert.csr`
+openssl req -new -key devcert.key -out devcert.csr
 ```
 
 ### Create pem from CSR

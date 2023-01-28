@@ -7,7 +7,7 @@ import lombok.NonNull;
 import java.util.Arrays;
 
 @Getter
-@Schema(description = "BookState")
+@Schema(type= "string", allowableValues = {"ACTIVE", "ON_HOLD", "FINISHED", "ARCHIVED"} , description = "BookState")
 public enum BookState {
   ACTIVE("Active"),
   ON_HOLD("On Hold"),

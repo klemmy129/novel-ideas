@@ -14,7 +14,8 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
-import javax.validation.ConstraintViolationException;
+import jakarta.validation.ConstraintViolationException;
+
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -25,6 +26,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -32,124 +34,128 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 class CharacterGenderControllerTest {
 
-  @Autowired
-  private MockMvc mockMvc;
+    @Autowired
+    private MockMvc mockMvc;
 
-  @Autowired
-  private ObjectMapper objectMapper;
+    @Autowired
+    private ObjectMapper objectMapper;
 
-  @MockBean
-  private CharacterGenderService service;
+    @MockBean
+    private CharacterGenderService service;
 
-  @Test
-  @WithMockUser
-  void getAll__success() throws Exception {
-    List<CharacterGenderDto> dtoList = List.of(
-        TestEntities.characterGenderDtoBuilder(),
-        TestEntities.characterGenderDtoBuilder2());
-    when(service.loadAll()).thenReturn(dtoList);
+    @Test
+    @WithMockUser
+    void getAll__success() throws Exception {
+        List<CharacterGenderDto> dtoList = List.of(
+                TestEntities.characterGenderDtoBuilder(),
+                TestEntities.characterGenderDtoBuilder2());
+        when(service.loadAll()).thenReturn(dtoList);
 
-    this.mockMvc.perform(get("/gender/"))
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$[0].id").value(dtoList.get(0).id()))
-        .andExpect(jsonPath("$[1].id").value(dtoList.get(1).id()));
-  }
+        this.mockMvc.perform(get("/gender/"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].id").value(dtoList.get(0).id()))
+                .andExpect(jsonPath("$[1].id").value(dtoList.get(1).id()));
+    }
 
-  @Test
-  @WithMockUser
-  void getId__validData__success() throws Exception {
-    CharacterGenderDto dto = TestEntities.characterGenderDtoBuilder();
-    when(service.loadGender(dto.id())).thenReturn(dto);
+    @Test
+    @WithMockUser
+    void getId__validData__success() throws Exception {
+        CharacterGenderDto dto = TestEntities.characterGenderDtoBuilder();
+        when(service.loadGender(dto.id())).thenReturn(dto);
 
-    this.mockMvc.perform(get("/gender/" + dto.id()))
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.id").value(dto.id()));
-  }
+        this.mockMvc.perform(get("/gender/" + dto.id()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(dto.id()));
+    }
 
-  @Test
-  @WithMockUser
-  void getId__inValidId__failure() throws Exception {
-    doThrow(new FindDataException(String.format("Could not find Gender with id:%d.",
-        TestEntities.NOT_GENERIC_ID))).when(service).loadGender(TestEntities.NOT_GENERIC_ID);
+    @Test
+    @WithMockUser
+    void getId__inValidId__failure() throws Exception {
+        doThrow(new FindDataException(String.format("Could not find Gender with id:%d.",
+                TestEntities.NOT_GENERIC_ID))).when(service).loadGender(TestEntities.NOT_GENERIC_ID);
 
-    this.mockMvc.perform(get("/gender/" + TestEntities.NOT_GENERIC_ID))
-        .andExpect(status().isNotFound())
-        .andExpect(result -> assertThat(result.getResolvedException()).isInstanceOf(FindDataException.class));
+        this.mockMvc.perform(get("/gender/" + TestEntities.NOT_GENERIC_ID))
+                .andExpect(status().isNotFound())
+                .andExpect(result -> assertThat(result.getResolvedException()).isInstanceOf(FindDataException.class));
 
-  }
+    }
 
-  @Test
-  @WithMockUser
-  void create__validData__success() throws Exception {
-    CharacterGenderDto dto = TestEntities.characterGenderDtoCreateBuilder();
-    when(service.create(any(CharacterGenderDto.class))).thenReturn(dto);
+    @Test
+    @WithMockUser
+    void create__validData__success() throws Exception {
+        CharacterGenderDto dto = TestEntities.characterGenderDtoCreateBuilder();
+        when(service.create(any(CharacterGenderDto.class))).thenReturn(dto);
 
-    this.mockMvc.perform(post("/gender/")
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .content(objectMapper.writeValueAsString(dto)))
-        .andExpect(status().isCreated())
-        .andExpect(jsonPath("$.id").value(dto.id()));
-  }
+        this.mockMvc.perform(post("/gender/")
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(objectMapper.writeValueAsString(dto)))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.id").value(dto.id()));
+    }
 
-  @Test
-  @WithMockUser
-  void create__inValidData__failure() throws Exception {
-    CharacterGenderDto dtoBad = TestEntities.characterGenderDtoBuilder();
+    @Test
+    @WithMockUser
+    void create__inValidData__failure() throws Exception {
+        CharacterGenderDto dtoBad = TestEntities.characterGenderDtoBuilder();
 
-    this.mockMvc.perform(post("/gender/")
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .content(objectMapper.writeValueAsString(dtoBad)))
-        .andExpect(status().isBadRequest())
-        .andExpect(result -> assertThat(result.getResolvedException()).isInstanceOf(ConstraintViolationException.class))
-        .andExpect(jsonPath("$.violations[0].fieldName").value("create.characterGenderDto.id"))
-        .andExpect(jsonPath("$.violations[0].message").value("must be null"));
+        this.mockMvc.perform(post("/gender/")
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(objectMapper.writeValueAsString(dtoBad)))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON_VALUE))
+                .andExpect(result -> assertThat(result.getResolvedException()).isInstanceOf(ConstraintViolationException.class))
+                .andExpect(jsonPath("$.detail").value("create.characterGenderDto.id: must be null")) // Normal Message
+                .andExpect(jsonPath("$.['create.characterGenderDto.id']").value("must be null"))  // ProblemDetail.setProperty
+                .andExpect(jsonPath("$.instance").value("/gender/"));
 
-  }
+    }
 
-  @Test
-  @WithMockUser
-  void update__validData__success() throws Exception {
-    CharacterGenderDto dto = TestEntities.characterGenderDtoBuilder();
-    when(service.update(any(CharacterGenderDto.class))).thenReturn(dto);
+    @Test
+    @WithMockUser
+    void update__validData__success() throws Exception {
+        CharacterGenderDto dto = TestEntities.characterGenderDtoBuilder();
+        when(service.update(any(CharacterGenderDto.class))).thenReturn(dto);
 
-    this.mockMvc.perform(put("/gender/")
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .content(objectMapper.writeValueAsString(dto)))
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.id").value(dto.id()));
-  }
+        this.mockMvc.perform(put("/gender/")
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(objectMapper.writeValueAsString(dto)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(dto.id()));
+    }
 
-  @Test
-  @WithMockUser
-  void update__nullId__failure() throws Exception {
-    CharacterGenderDto dtoWithNullId = TestEntities.characterGenderDtoCreateBuilder();
+    @Test
+    @WithMockUser
+    void update__nullId__failure() throws Exception {
+        CharacterGenderDto dtoWithNullId = TestEntities.characterGenderDtoCreateBuilder();
 
-    this.mockMvc.perform(put("/gender/")
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .content(objectMapper.writeValueAsString(dtoWithNullId)))
-        .andExpect(status().isBadRequest())
-        .andExpect(result -> assertThat(result.getResolvedException()).isInstanceOf(ConstraintViolationException.class))
-        .andExpect(jsonPath("$.violations[0].fieldName").value("update.characterGenderDto.id"))
-        .andExpect(jsonPath("$.violations[0].message").value("must not be null"));
+        this.mockMvc.perform(put("/gender/")
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(objectMapper.writeValueAsString(dtoWithNullId)))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON_VALUE))
+                .andExpect(result -> assertThat(result.getResolvedException()).isInstanceOf(ConstraintViolationException.class))
+                .andExpect(jsonPath("$.detail").value("update.characterGenderDto.id: must not be null")) // Normal Message
+                .andExpect(jsonPath("$.['update.characterGenderDto.id']").value("must not be null"))  // ProblemDetail.setProperty
+                .andExpect(jsonPath("$.instance").value("/gender/"));
 
-  }
+    }
 
-  @Test
-  @WithMockUser
-  void delete__validData__success() throws Exception {
-    this.mockMvc.perform(delete("/gender/" + TestEntities.GENERIC_ID))
-        .andExpect(status().isNoContent());
-  }
+    @Test
+    @WithMockUser
+    void delete__validData__success() throws Exception {
+        this.mockMvc.perform(delete("/gender/" + TestEntities.GENERIC_ID))
+                .andExpect(status().isNoContent());
+    }
 
-  @Test
-  @WithMockUser
-  void delete__inValidData__failure() throws Exception {
+    @Test
+    @WithMockUser
+    void delete__inValidData__failure() throws Exception {
 
-    doThrow(new FindDataException(String.format("Could not find Gender with id:%d, to delete.",
-        TestEntities.NOT_GENERIC_ID))).when(service).delete(TestEntities.NOT_GENERIC_ID);
+        doThrow(new FindDataException(String.format("Could not find Gender with id:%d, to delete.",
+                TestEntities.NOT_GENERIC_ID))).when(service).delete(TestEntities.NOT_GENERIC_ID);
 
-    this.mockMvc.perform(delete("/gender/" + TestEntities.NOT_GENERIC_ID))
-        .andExpect(status().isNotFound())
-        .andExpect(result -> assertThat(result.getResolvedException()).isInstanceOf(FindDataException.class));
-  }
+        this.mockMvc.perform(delete("/gender/" + TestEntities.NOT_GENERIC_ID))
+                .andExpect(status().isNotFound())
+                .andExpect(result -> assertThat(result.getResolvedException()).isInstanceOf(FindDataException.class));
+    }
 }

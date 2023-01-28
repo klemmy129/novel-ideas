@@ -19,6 +19,7 @@ public class ActiveMQProducer implements MessageBus {
   private final JmsTemplate jmsTemplate;
   private final MessageBusProperties messageBusProperties;
 
+  @Override
   public void sendMessage(BookDto message){
     try{
       log.info("Attempting Send message to Topic: "+ messageBusProperties.topic());

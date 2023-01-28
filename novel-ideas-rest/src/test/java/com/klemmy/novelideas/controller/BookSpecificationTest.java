@@ -61,7 +61,8 @@ class BookSpecificationTest {
   @WithMockUser
   void findAllByFilters__noMatchFilters__success() {
     Pageable page = PageRequest.of(0, 5);
-    Set<BookState> noMatch = Collections.singleton(BookState.ARCHIVED);
+   // Set<BookState> noMatch = Collections.singleton(BookState.ARCHIVED);
+    BookState noMatch = BookState.ARCHIVED;
 
     Page<Book> result = bookRepository.findAllByFilters(null, null, null, noMatch, page);
 
@@ -74,7 +75,7 @@ class BookSpecificationTest {
     Pageable page = PageRequest.of(0, 5);
     LocalDateTime oneMonthEarlier = TestEntities.PAST_DATETIME.minusMonths(1);
     LocalDateTime oneMonthLater = TestEntities.PAST_DATETIME.plusMonths(1);
-    Set<BookState> state = Collections.singleton(BookState.ACTIVE);
+    BookState state = BookState.ACTIVE;
 
     Page<Book> result = bookRepository.findAllByFilters("harry potter", oneMonthEarlier, oneMonthLater, state, page);
 

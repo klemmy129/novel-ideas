@@ -9,8 +9,9 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @ConditionalOnProperty(name = "message-bus.type", havingValue = "none", matchIfMissing = true)
-public class NoMessageBuss implements MessageBus {
+public class NoMessageBus implements MessageBus {
 
+  @Override
   public void sendMessage(BookDto message) { /* This method is empty, there is no message but configured */ }
 
 }

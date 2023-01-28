@@ -19,7 +19,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -33,7 +32,7 @@ public class BookService {
   private final MessageBus messageBus;
 
   public Page<BookDto> loadAll(String queryTitle, LocalDateTime startDate, LocalDateTime endDate,
-                               Set<BookState> state, Pageable pageable) {
+                               BookState state, Pageable pageable) {
     return bookRepository.findAllByFilters(queryTitle, startDate, endDate, state, pageable)
         .map(BookFactory::toDTO);
   }

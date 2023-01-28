@@ -8,10 +8,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import java.io.Serial;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RestPage<T> extends PageImpl<T> {
+public class RestPage<T> extends PageImpl<T> implements Serializable {
 
   @Serial
   private static final long serialVersionUID = 3348189030448292033L;
@@ -33,7 +34,7 @@ public class RestPage<T> extends PageImpl<T> {
   }
 
   public RestPage() {
-    super(new ArrayList<T>());
+    super(new ArrayList<>());
   }
 
 }

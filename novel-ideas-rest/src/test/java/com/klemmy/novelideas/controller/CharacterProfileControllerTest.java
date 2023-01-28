@@ -19,7 +19,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
-import javax.validation.ConstraintViolationException;
+import jakarta.validation.ConstraintViolationException;
 import java.util.Collections;
 import java.util.List;
 
@@ -129,9 +129,12 @@ class CharacterProfileControllerTest {
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .content(objectMapper.writeValueAsString(dtoBad)))
         .andExpect(status().isBadRequest())
+        .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON_VALUE))
         .andExpect(result -> assertThat(result.getResolvedException()).isInstanceOf(ConstraintViolationException.class))
-        .andExpect(jsonPath("$.violations[0].fieldName").value("create.characterProfileDto.id"))
-        .andExpect(jsonPath("$.violations[0].message").value("must be null"));
+        .andExpect(jsonPath("$.detail").value("create.characterProfileDto.id: must be null")) // Normal Message
+        .andExpect(jsonPath("$.['create.characterProfileDto.id']").value("must be null"))  // ProblemDetail.setProperty
+        .andExpect(jsonPath("$.instance").value("/character-profile/"));
+
 
   }
 

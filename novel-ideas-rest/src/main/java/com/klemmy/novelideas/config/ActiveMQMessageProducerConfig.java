@@ -1,6 +1,7 @@
 package com.klemmy.novelideas.config;
 
-import org.apache.activemq.ActiveMQConnectionFactory;
+import jakarta.jms.JMSException;
+import org.apache.activemq.artemis.jms.client.ActiveMQConnectionFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -8,8 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.jms.annotation.EnableJms;
 import org.springframework.jms.core.JmsTemplate;
 
-import javax.jms.ConnectionFactory;
-import java.util.List;
+import jakarta.jms.ConnectionFactory;
 
 @Configuration
 @EnableJms
@@ -24,16 +24,19 @@ public class ActiveMQMessageProducerConfig {
   }
 
   @Bean
-  public ConnectionFactory producerActiveMQConnectionFactory() {
+  @ConditionalOnProperty(name = "message-bus.type", havingValue = "activemq")
+  public ConnectionFactory producerActiveMQConnectionFactory() throws JMSException {
     ActiveMQConnectionFactory activeMQConnectionFactory = new ActiveMQConnectionFactory();
     activeMQConnectionFactory.setBrokerURL(this.messageBusProperties.brokerUrl());
-    activeMQConnectionFactory.setTrustedPackages(List.of("com.klemmy.novelideas.service"));
+    // TODO I thing this should be in consumer
+    activeMQConnectionFactory.setDeserializationWhiteList("com.klemmy.novelideas.service");
 
     return activeMQConnectionFactory;
   }
 
   @Bean
-  public JmsTemplate jmsTemplate(){
+  @ConditionalOnProperty(name = "message-bus.type", havingValue = "activemq")
+  public JmsTemplate jmsTemplate() throws JMSException {
     JmsTemplate jmsTemplate = new JmsTemplate();
     jmsTemplate.setConnectionFactory(producerActiveMQConnectionFactory());
     jmsTemplate.setPubSubDomain(true);  // enable for Pub Sub to topic. Not Required for Queue.

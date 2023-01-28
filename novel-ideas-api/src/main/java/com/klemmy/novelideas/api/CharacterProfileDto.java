@@ -1,41 +1,45 @@
 package com.klemmy.novelideas.api;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Null;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Null;
 import java.io.Serializable;
 import java.time.LocalDate;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Builder(toBuilder = true)
 @Schema(description = "Character Profile")
 public class CharacterProfileDto implements Serializable {
 
   @Null(groups = OnCreate.class)
   @NotNull(groups = OnUpdate.class)
-  private final Integer id;
+  private Integer id;
   @NotEmpty(message = "Must have a Character Name")
-  private final String characterName;
-  private final String title;
-  private final String firstName;
-  private final String middleName;
-  private final String surname;
-  private final String nickName;
-  private final CharacterGenderDto gender;
+  private String characterName;
+  private String title;
+  private String firstName;
+  private String middleName;
+  private String surname;
+  private String nickName;
+  private CharacterGenderDto gender;
   @NotNull(message = "What Type or Importance is this character")
-  private final CharacterImportanceDto characterImportance;
+  private CharacterImportanceDto characterImportance;
   @Length(max = 4000)
-  private final String physicalDescription;
+  private String physicalDescription;
   @Length(max = 4000)
-  private final String innerGoal;
+  private String innerGoal;
   @Length(max = 4000)
-  private final String outerGoal;
+  private String outerGoal;
   @Length(max = 4000)
-  private final String functionInStory;
-  private final LocalDate dateOfBirth;
+  private String functionInStory;
+  private LocalDate dateOfBirth;
 }
