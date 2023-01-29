@@ -20,7 +20,7 @@
     </parent>
     <groupId>com.klemmy</groupId>
     <artifactId>novel-ideas</artifactId>
-    <version>1.3.0</version>
+    <version>1.3.1</version>
     <name>novel-ideas</name>
     <description>Demo project for Spring Boot</description>
 
@@ -37,7 +37,7 @@
         <spring-boot.version>3.0.2</spring-boot.version>
         <springdoc.version>2.0.2</springdoc.version>
         <swagger-v3.version>2.2.8</swagger-v3.version>
-        <typescript-generator.version>3.0.1157</typescript-generator.version>
+        <typescript-generator.version>3.1.1185</typescript-generator.version>
     </properties>
 
     <dependencyManagement>
