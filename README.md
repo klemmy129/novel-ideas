@@ -14,7 +14,7 @@ This application is Rest backend for managing data and information about a novel
 This is also a Java Spring Boot demonstrator for a Rest application.
 
 I have also created a second Java Spring Boot demonstrator [novel-ghostwriter](https://github.com/klemmy129/novel-ghostwriter), 
-this is used to show how to a http client communicates with novel-idears and (SOON) AMPQ events. 
+this is used to show how to a http client communicates with novel-idears and AMPQ events. 
 
 The frontend Demo to this application is [novel-ideas-iu](https://github.com/klemmy129/novel-ideas-ui) an Angular 14 application.
 
@@ -49,9 +49,12 @@ The frontend Demo to this application is [novel-ideas-iu](https://github.com/kle
   - [Why Maven Modules](#why-maven-modules)
     - [novel-ideas-api](#novel-ideas-api)
     - [novel-ideas-client](#novel-ideas-client)
+    - [novel-ideas-client3](#novel-ideas-client3)
     - [novel-ideas-autoconfig](#novel-ideas-autoconfig)
     - [novel-ideas-client-starter](#novel-ideas-client-starter)
-    - [Using the artifacts in another application](#using-the-artifacts-in-another-application)
+    - [novel-ideas-jpa](#novel-ideas-jpa)
+    - [novel-ideas-rest](#novel-ideas-rest)
+  - [Using the artifacts in another application](#using-the-artifacts-in-another-application)
   - [Constructor-based Dependency Injection](#constructor-based-dependency-injection)
   - [Enum](#enum)
   - [JPA Specification](#jpa-specification)
@@ -211,8 +214,16 @@ This client would be used in other Java applications.
 This Class would have a handful of methods that would call the rest endpoint URL, properly formatted. 
 Making it easier for the developer. I put a small sample [NovelIdeasClient](novel-ideas-client/src/main/java/com/klemmy/novelideas/client/NovelIdeasClient.java). 
 
+#### novel-ideas-client3
+I added novel-ideas-client3 module, but I could have just added the client class into the novel-ideas-api module.
+I have used the new (in Spring Boot 3.0+) declarative interface for Web Client, opposed to RestTemplate pattern.
+This uses the new annotation `@GetExchange`. There are more, but I did not use them in this demo.
+This Class would have a handful of methods that would call the rest endpoint URL, properly formatted.
+Making it easier for the developer. I put a small sample [NovelIdeasClient3](novel-ideas-client3/src/main/java/com/klemmy/novelideas/client3/NovelIdeasClient3.java).
+
+
 #### novel-ideas-autoconfig
-This module all the beans needed to start the client in another Java application like [novel-ghostwriter](https://github.com/klemmy129/novel-ghostwriter) 
+This module all the beans needed to start both novel-ideas-client and novel-ideas-client3 in another Java application like [novel-ghostwriter](https://github.com/klemmy129/novel-ghostwriter) 
 The Property and Configuration classes used with the client are using multiple annotations:
 
 **Used by Property Class/Record**
@@ -228,9 +239,27 @@ The Property and Configuration classes used with the client are using multiple a
 * `@DependsOn("ssl")` Bean creation can you unpredictable, this is one way you can make sure your bean has what it needs to create itself. 
 
 #### novel-ideas-client-starter
-Just a `pom.xml` that you would include in another Java application that you are setting up the client to call this application.
+Just a `pom.xml` that you would include in another Java application that you are setting up the client via the Autoconfig to call this application.
 
-#### Using the artifacts in another application
+#### novel-ideas-jpa
+Database stuff.
+
+This module has the JPA repositories, specifications and models used with the repositories.
+
+These models have jakarta persistence and validation annotations to help model the table structure in the database.
+
+JPA (Jakarta Persistence API, formerly Java Persistence API) the framework I have used is Hibernate. 
+Hibernate is an Object-Relational Mapping (ORM). JPA lets you avoid the need to “think relationally", opposed to JDBC. 
+
+This also has the flyway script in the resources. These are usually sql scripts that create and manipulate tables and other database objects
+
+#### novel-ideas-rest
+This module has RestControllers, Services, DTO Factories, configuration to help setup the application context and main to start the application.
+
+The controllers are the inputs and outputs to the public. Service are the business logic. 
+The Factories convert the API DTOs used be the controllers and transforms them into JPA models. 
+
+### Using the artifacts in another application
 For another Java application to use is, they would:
 1. Add the novel-idea-api to you POM file (or novel-idea-autoconfig which loads the novel-idea-client and novel-idea-api if the autoconfig condition were met).
 2. NovelIdeasClient requires 2x parameters:
