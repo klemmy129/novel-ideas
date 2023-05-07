@@ -16,7 +16,7 @@ This is also a Java Spring Boot demonstrator for a Rest application.
 I have also created a second Java Spring Boot demonstrator [novel-ghostwriter](https://github.com/klemmy129/novel-ghostwriter), 
 this is used to show how to a http client communicates with novel-idears and AMPQ events. 
 
-The frontend Demo to this application is [novel-ideas-iu](https://github.com/klemmy129/novel-ideas-ui) an Angular 14 application.
+The frontend Demo to this application is [novel-ideas-iu](https://github.com/klemmy129/novel-ideas-ui) an Angular 15 application.
 
 ## Table of Contents
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
@@ -40,6 +40,8 @@ The frontend Demo to this application is [novel-ideas-iu](https://github.com/kle
     - [application.yml](#applicationyml)
     - [application-oracle.yml](#application-oracleyml)
     - [application-postgres.yml](#application-postgresyml)
+    - [application-activemq.yml](#application-activemqyml)
+    - [application-stomp.yml](#application-stompyml)
   - [Running it](#running-it)
   - [Viewing it](#viewing-it)
     - [Swagger](#swagger)
@@ -76,7 +78,7 @@ The frontend Demo to this application is [novel-ideas-iu](https://github.com/kle
 Note: All sample paths in this project are using Linux base.
 - Java 19
 - Maven
-- Spring Boot 3.0.2
+- Spring Boot 3.0.6
 - JPA/Hibernate
 - FlyWay
   - Oracle 21c XE
@@ -130,7 +132,11 @@ _COMING SOON_
 _COMING SOON_
 
 ### For Docker
-_COMING SOON_
+Added a basic docker file, but currently needs Kubernetes map the certificates into the Pod.
+
+THis is just the start as I'm creating a new repo for Kubernetes using [Kind](https://kind.sigs.k8s.io/) and the setup and mangement using [Helm Charts](https://helm.sh/). 
+
+_MORE COMING SOON_
 
 ## Startup
 
@@ -142,8 +148,9 @@ _COMING SOON_
 * H2
 `h2`
 * ActiveMQ `activemq`
+* STOMP `stomp`
 
-Eg `oracle,activemq`
+Eg `oracle,activemq,stomp`
 
 ### Environment Variables
 #### application.yml
@@ -163,10 +170,19 @@ Eg `oracle,activemq`
 - DB_USERNAME _default novel_
 - DB_PASSWORD _default novel1_
 
+#### application-activemq.yml
+- MBUS_URL _default localhost
+
+#### application-stomp.yml
+- MBUS_URL _default 127.0.0.1
+- BUSPOST _default 61613
+- WS_USERNAME _default guest
+- WS_PASSWD _default guest
+
 ### Running it
 I normally run it up in my IDE. eg Intellij or VSCode
 
-or command line eg: `java -jar -Dspring.profiles.active=oracle,activemq ./novel-ideas-rest/target/novel-ideas-rest-1.1.0.jar`
+or command line eg: `java -Dspring.profiles.active=oracle,activemq  -jar ./novel-ideas-rest/target/novel-ideas-rest-1.4.0.jar`
 
 and you will need to define your system's environment variables, from the above section.
 
@@ -195,7 +211,7 @@ That should report:
 
 You can configure many more, but be warned, think of security.
 
-Spring Boot Actuators documentation: https://docs.spring.io/spring-boot/docs/2.7.4/reference/html/actuator.html#actuator.enabling
+Spring Boot Actuators documentation: https://docs.spring.io/spring-boot/docs/3.0.6/reference/html/actuator.html#actuator.enabling
 
 
 ## Coding Demo Explained

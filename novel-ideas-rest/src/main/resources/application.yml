@@ -18,11 +18,11 @@ management:
         include:
           - health
           - info
-  health:
-    livenessstate:
-      enabled: true
-    readinessstate:
-      enabled: true
+  endpoint:
+    health:
+      group:
+        readiness:
+          include: "readinessState"
 
 message-bus:
   type: none
@@ -53,7 +53,9 @@ server:
 springdoc:
   swagger-ui:
     #For sorting endpoints alphabetically
-    operationsSorter: alpha
+    operations-sorter: alpha
     #For sorting tags alphabetically
-    tagsSorter: alpha
+    tags-sorter: alpha
+  #For sorting schemas
+  writer-with-order-by-keys: true
 

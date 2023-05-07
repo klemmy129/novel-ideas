@@ -1,0 +1,5 @@
+stomp:
+  url: ${MBUS_URL:127.0.0.1}
+  port: ${BUSPOST:61613}
+  account: ${WS_USERNAME:guest}
+  passcode: ${WS_PASSWD:guest}
