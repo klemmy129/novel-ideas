@@ -4,9 +4,10 @@
 ![GitHub top language](https://img.shields.io/github/languages/top/klemmy129/novel-ideas)
 ![GitHub](https://img.shields.io/github/license/klemmy129/novel-ideas)
 ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/klemmy129/novel-ideas)
-![GitHub Workflow Status](https://img.shields.io/github/workflow/status/klemmy129/novel-ideas/CodeQL)
-![Snyk Vulnerabilities for GitHub Repo (Specific Manifest)](https://img.shields.io/snyk/vulnerabilities/github/klemmy129/novel-ideas/pom.xml)
 ![GitHub issues](https://img.shields.io/github/issues/klemmy129/novel-ideas)
+[![CodeQL](https://github.com/klemmy129/novel-ideas/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/klemmy129/novel-ideas/actions/workflows/codeql-analysis.yml)
+![GitHub Workflow Status](http://img.shields.io/github/actions/workflow/status/klemmy129/novel-ideas/codeql-analysis.yml?branch=main)
+[![Dependency Review](https://github.com/klemmy129/novel-ideas/actions/workflows/dependency-review.yml/badge.svg)](https://github.com/klemmy129/novel-ideas/actions/workflows/dependency-review.yml)
 
 ## Description  
 This application is Rest backend for managing data and information about a novel or script you want to write.
@@ -54,7 +55,6 @@ The frontend Demo to this application is [novel-ideas-iu](https://github.com/kle
     - [novel-ideas-client3](#novel-ideas-client3)
     - [novel-ideas-autoconfig](#novel-ideas-autoconfig)
     - [novel-ideas-client-starter](#novel-ideas-client-starter)
-    - [novel-ideas-jpa](#novel-ideas-jpa)
     - [novel-ideas-rest](#novel-ideas-rest)
   - [Using the artifacts in another application](#using-the-artifacts-in-another-application)
   - [Constructor-based Dependency Injection](#constructor-based-dependency-injection)
@@ -76,9 +76,9 @@ The frontend Demo to this application is [novel-ideas-iu](https://github.com/kle
 
 ## Technology Used
 Note: All sample paths in this project are using Linux base.
-- Java 19
+- Java 20
 - Maven
-- Spring Boot 3.0.6
+- Spring Boot 3.1.3
 - JPA/Hibernate
 - FlyWay
   - Oracle 21c XE
@@ -134,7 +134,7 @@ _COMING SOON_
 ### For Docker
 Added a basic docker file, but currently needs Kubernetes map the certificates into the Pod.
 
-THis is just the start as I'm creating a new repo for Kubernetes using [Kind](https://kind.sigs.k8s.io/) and the setup and mangement using [Helm Charts](https://helm.sh/). 
+This is just the start as I'm creating a new repo for Kubernetes using [Kind](https://kind.sigs.k8s.io/) and the setup and mangement using [Helm Charts](https://helm.sh/). 
 
 _MORE COMING SOON_
 
@@ -262,18 +262,21 @@ Database stuff.
 
 This module has the JPA repositories, specifications and models used with the repositories.
 
-These models have jakarta persistence and validation annotations to help model the table structure in the database.
-
-JPA (Jakarta Persistence API, formerly Java Persistence API) the framework I have used is Hibernate. 
-Hibernate is an Object-Relational Mapping (ORM). JPA lets you avoid the need to “think relationally", opposed to JDBC. 
-
-This also has the flyway script in the resources. These are usually sql scripts that create and manipulate tables and other database objects
 
 #### novel-ideas-rest
-This module has RestControllers, Services, DTO Factories, configuration to help setup the application context and main to start the application.
+This module has RestControllers, Services, JPA repositories,specifications, models used with the repositories, DTO Factories, configuration to help setup the application context and main to start the application.
 
 The controllers are the inputs and outputs to the public. Service are the business logic. 
-The Factories convert the API DTOs used be the controllers and transforms them into JPA models. 
+The Factories convert the API DTOs used be the controllers and transforms them into JPA models for the repositories. 
+
+Some of the JPA repositories queries use specifications.
+
+These models have jakarta persistence and validation annotations to help model the table structure in the database.
+
+JPA (Jakarta Persistence API, formerly Java Persistence API) the framework I have used is Hibernate.
+Hibernate is an Object-Relational Mapping (ORM). JPA lets you avoid the need to “think relationally", opposed to JDBC.
+
+This also has the flyway script in the resources. These are usually sql scripts that create and manipulate tables and other database objects
 
 ### Using the artifacts in another application
 For another Java application to use is, they would:

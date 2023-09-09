@@ -5,7 +5,6 @@
     <packaging>pom</packaging>
     <modules>
         <module>novel-ideas-api</module>
-        <module>novel-ideas-jpa</module>
         <module>novel-ideas-rest</module>
         <module>novel-ideas-client-starter</module>
         <module>novel-ideas-client</module>
@@ -15,28 +14,30 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.0.6</version>
+        <version>3.1.3</version>
          <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.klemmy</groupId>
     <artifactId>novel-ideas</artifactId>
-    <version>1.4.0</version>
+    <version>1.5.0</version>
     <name>novel-ideas</name>
     <description>Demo project for Spring Boot</description>
 
     <properties>
-        <java.version>19</java.version>
+        <java.version>20</java.version>
+        <maven.compiler.source>20</maven.compiler.source>
+        <maven.compiler.target>20</maven.compiler.target>
 
         <apache-httpclient5.version>5.2.1</apache-httpclient5.version>
-        <apache-httpcore5.version>5.2</apache-httpcore5.version>
-        <codehaus-helper.version>3.3.0</codehaus-helper.version>
-        <javax-jaxb.verion>2.3.1</javax-jaxb.verion>
+        <apache-httpcore5.version>5.2.2</apache-httpcore5.version>
+        <codehaus-helper.version>3.4.0</codehaus-helper.version>
+        <h2.version>2.2.222</h2.version>
         <junit-launcher.version>1.9.2</junit-launcher.version>
         <modelmapper.version>3.1.1</modelmapper.version>
         <okhttp.version>4.10.0</okhttp.version>
-        <spring-boot.version>3.0.6</spring-boot.version>
-        <springdoc.version>2.1.0</springdoc.version>
-        <swagger-v3.version>2.2.9</swagger-v3.version>
+        <spring-boot.version>3.1.3</spring-boot.version>
+        <springdoc.version>2.2.0</springdoc.version>
+        <swagger-v3.version>2.2.15</swagger-v3.version>
         <typescript-generator.version>3.2.1263</typescript-generator.version>
     </properties>
 
@@ -115,11 +116,6 @@
                 <artifactId>swagger-models</artifactId>
                 <version>${swagger-v3.version}</version>
             </dependency>
-<!--            <dependency>-->
-<!--                <groupId>javax.xml.bind</groupId>-->
-<!--                <artifactId>jaxb-api</artifactId>-->
-<!--                <version>${javax-jaxb.verion}</version>-->
-<!--            </dependency>-->
             <dependency>
                 <groupId>jakarta.ws.rs</groupId>
                 <artifactId>jakarta.ws.rs-api</artifactId>
@@ -150,6 +146,14 @@
                 <artifactId>modelmapper</artifactId>
                 <version>${modelmapper.version}</version>
             </dependency>
+
+<!--            CVE workaround-->
+            <dependency>
+                <groupId>org.yaml</groupId>
+                <artifactId>snakeyaml</artifactId>
+                <version>2.2</version>
+            </dependency>
+
             <dependency>
                 <groupId>org.springdoc</groupId>
                 <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>

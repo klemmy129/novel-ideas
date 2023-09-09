@@ -73,7 +73,10 @@ class CharacterProfileSpecificationTest {
 
     assertThat(result.getContent()).isNotEmpty()
         .hasSize(2)
-        .allSatisfy(i -> assertThat(i.getCharacterName().contains("Harry Potter")));
+        .satisfiesExactly(
+            item1 -> assertThat(item1.getCharacterName()).isEqualTo("Harry Potter"),
+            item2 -> assertThat(item2.getCharacterName()).isEqualTo("James Potter")
+        );
   }
 
 }

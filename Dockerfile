@@ -1,4 +1,4 @@
-FROM openjdk:19-jdk-alpine
+FROM openjdk:20-jdk-alpine
 LABEL authors="klemmy129"
 
 EXPOSE 10443 1521 9876 61613
