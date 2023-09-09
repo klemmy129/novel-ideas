@@ -1,9 +1,9 @@
 package com.klemmy.novelideas.jpa.repository;
 
 import com.klemmy.novelideas.api.BookState;
-import com.klemmy.novelideas.jpa.Book;
 import com.klemmy.novelideas.jpa.CharacterProfile;
 import com.klemmy.novelideas.jpa.specification.FilterBookSpecification;
+import com.klemmy.novelideas.jpa.Book;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

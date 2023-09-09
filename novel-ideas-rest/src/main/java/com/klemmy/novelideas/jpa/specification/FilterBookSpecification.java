@@ -6,7 +6,6 @@ import lombok.experimental.UtilityClass;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.time.LocalDateTime;
-import java.util.Set;
 
 @UtilityClass
 public class FilterBookSpecification {

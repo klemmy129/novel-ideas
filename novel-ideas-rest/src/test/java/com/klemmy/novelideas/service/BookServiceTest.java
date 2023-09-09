@@ -21,10 +21,8 @@ import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -92,7 +90,7 @@ class BookServiceTest {
     when(repository.findById(anyInt())).thenReturn(book);
 
     assertThatThrownBy(() -> service.loadBook(null)).isInstanceOf(FindDataException.class)
-        .hasMessage(String.format("Could not find Book with id:%d.", null));
+        .hasMessage(String.format("Could not find Book with id:%d.", (Integer) null));
   }
 
   @Test

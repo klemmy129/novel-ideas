@@ -17,9 +17,7 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlGroup;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -81,7 +79,10 @@ class BookSpecificationTest {
 
     assertThat(result.getContent()).isNotEmpty()
         .hasSize(2)
-        .allSatisfy(i -> assertThat(i.getName().contains("harry potter")));
+        .satisfiesExactly(
+            item1 -> assertThat(item1.getName()).contains("Chamber of Secrets"),
+            item2 -> assertThat(item2.getName()).contains("Deathly Hallows")
+        );
   }
 
 }
