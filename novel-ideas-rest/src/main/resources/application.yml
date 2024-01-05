@@ -18,11 +18,11 @@ management:
         include:
           - health
           - info
-  endpoint:
-    health:
-      group:
-        readiness:
-          include: "readinessState"
+#  endpoint:
+#    health:
+#      group:
+#        readiness:
+#          include: "readinessState"
 
 message-bus:
   type: none

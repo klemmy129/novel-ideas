@@ -76,15 +76,15 @@ The frontend Demo to this application is [novel-ideas-iu](https://github.com/kle
 
 ## Technology Used
 Note: All sample paths in this project are using Linux base.
-- Java 20
+- Java 21
 - Maven
-- Spring Boot 3.1.3
+- Spring Boot 3.2.1
 - JPA/Hibernate
 - FlyWay
   - Oracle 21c XE
   - Postgres 13
   - H2
-- ActiveMQ 6 (Artemis)
+- ActiveMQ 6 (Artemis) (Commented out)
 - JUnit 5
 - AssertJ
 - Spring Docs

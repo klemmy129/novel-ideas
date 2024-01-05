@@ -10,8 +10,8 @@ import com.klemmy.novelideas.error.FindDataException;
 import com.klemmy.novelideas.jpa.Book;
 import com.klemmy.novelideas.jpa.CharacterProfile;
 import com.klemmy.novelideas.jpa.repository.BookRepository;
-import com.klemmy.novelideas.producer.MessageBus;
-import com.klemmy.novelideas.producer.NoMessageBus;
+//import com.klemmy.novelideas.producer.MessageBus;
+//import com.klemmy.novelideas.producer.NoMessageBus;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.data.domain.Page;
@@ -38,9 +38,10 @@ import static org.mockito.Mockito.when;
 class BookServiceTest {
 
   BookRepository repository = mock(BookRepository.class);
-  MessageBus messageBus = mock(NoMessageBus.class);
+//  MessageBus messageBus = mock(NoMessageBus.class);
 
-  private final BookService service = new BookService(repository, messageBus);
+  private final BookService service = new BookService(repository);
+//  private final BookService service = new BookService(repository, messageBus);
 
   @Test
   void loadAll__noParams__success() {

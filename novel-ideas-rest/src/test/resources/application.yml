@@ -31,5 +31,5 @@ info:
   app:
     version: 1.5.0
 
-message-bus:
-  type: none
+#message-bus:
+#  type: none
