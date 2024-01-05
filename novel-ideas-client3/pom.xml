@@ -6,13 +6,13 @@
     <parent>
         <groupId>com.klemmy</groupId>
         <artifactId>novel-ideas</artifactId>
-        <version>1.5.0</version>
+        <version>1.6.0</version>
     </parent>
     <artifactId>novel-ideas-client3</artifactId>
     <description>Novel Ideas Declarative HTTP interface Client for third-party application</description>
 
     <properties>
-        <java.version>19</java.version>
+        <java.version>21</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
     <dependencies>

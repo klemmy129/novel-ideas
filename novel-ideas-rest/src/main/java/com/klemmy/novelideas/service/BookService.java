@@ -9,7 +9,7 @@ import com.klemmy.novelideas.error.FindDataException;
 import com.klemmy.novelideas.jpa.Book;
 import com.klemmy.novelideas.jpa.CharacterProfile;
 import com.klemmy.novelideas.jpa.repository.BookRepository;
-import com.klemmy.novelideas.producer.MessageBus;
+//import com.klemmy.novelideas.producer.MessageBus;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -29,7 +29,7 @@ public class BookService {
 
   private final BookRepository bookRepository;
 
-  private final MessageBus messageBus;
+//  private final MessageBus messageBus;
 
   public Page<BookDto> loadAll(String queryTitle, LocalDateTime startDate, LocalDateTime endDate,
                                BookState state, Pageable pageable) {
@@ -41,7 +41,7 @@ public class BookService {
     Optional<Book> book = bookRepository.findById(id);
     BookDto bookDto = BookFactory.toDTO(book.orElseThrow(
         () -> new FindDataException(String.format(MSG, id, "."))));
-    messageBus.sendMessage(bookDto);
+//    messageBus.sendMessage(bookDto);
     return bookDto;
   }
 

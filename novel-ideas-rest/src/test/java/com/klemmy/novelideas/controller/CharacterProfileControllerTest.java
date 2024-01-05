@@ -20,6 +20,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import jakarta.validation.ConstraintViolationException;
+
 import java.util.Collections;
 import java.util.List;
 
@@ -53,9 +54,11 @@ class CharacterProfileControllerTest {
   @Test
   @WithMockUser
   void getAll__withNoInputs__success() throws Exception {
+    Pageable pageable = PageRequest.of(0, 5);
     Page<CharacterProfileDto> dtoList = new PageImpl<>(List.of(
         TestEntities.characterProfileDtoBuilder().build(),
-        TestEntities.characterProfileDtoBuilder2().build()));
+        TestEntities.characterProfileDtoBuilder2().build()),
+        pageable, 2);
     when(service.loadAll(eq(null), eq(null), eq(null), any(Pageable.class))).thenReturn(dtoList);
 
     this.mockMvc.perform(get("/character-profile/"))
@@ -68,15 +71,18 @@ class CharacterProfileControllerTest {
   @Test
   @WithMockUser
   void getAll__withInputs__success() throws Exception {
-    Page<CharacterProfileDto> dtoList = new PageImpl<>(Collections.singletonList(TestEntities.characterProfileDtoBuilder().build()));
+    Pageable pageable = PageRequest.of(0, 5);
+    Page<CharacterProfileDto> dtoList = new PageImpl<>(Collections.singletonList(TestEntities.characterProfileDtoBuilder().build()), pageable, 1);
 
-    when(service.loadAll(anyString(), anyString(), anyString(), any(Pageable.class))).thenReturn(dtoList);
+    //when(service.loadAll(eq(TestEntities.GENERIC_VALUE), eq(TestEntities.GENERIC_VALUE), eq(TestEntities.GENDER_MALE), any(Pageable.class))).thenReturn(dtoList);
+    when(service.loadAll(anyString(), anyString(), anyString(), any())).thenReturn(dtoList);
+
 
     this.mockMvc.perform(get("/character-profile/")
-            .param("queryName", TestEntities.GENERIC_VALUE)
-            .param("importance", TestEntities.GENERIC_VALUE)
-            .param("gender", TestEntities.GENDER_MALE)
-            .param("pageable", String.valueOf(PageRequest.of(0, 5)))
+                .param("queryName", TestEntities.GENERIC_VALUE)
+                .param("importance", TestEntities.GENERIC_VALUE)
+                .param("gender", TestEntities.GENDER_MALE)
+//            .param("pageable", String.valueOf(PageRequest.of(0, 5)))
         )
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
