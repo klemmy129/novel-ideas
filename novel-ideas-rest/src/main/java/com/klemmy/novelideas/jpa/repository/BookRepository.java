@@ -17,11 +17,11 @@ import java.util.Optional;
 import static org.springframework.data.jpa.domain.Specification.where;
 
 @Repository
-public interface BookRepository extends JpaRepository<Book, Integer>, JpaSpecificationExecutor<Book> {
+public interface BookRepository extends JpaRepository<Book, Long>, JpaSpecificationExecutor<Book> {
 
   void delete(Book book);
 
-  Optional<List<CharacterProfile>> findBookById(Integer id);
+  Optional<List<CharacterProfile>> findBookById(Long id);
 
   default Page<Book> findAllByFilters(final String queryTitle,
                                       final LocalDateTime startDate,

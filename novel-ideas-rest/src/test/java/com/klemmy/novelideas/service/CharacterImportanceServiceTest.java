@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -37,7 +37,7 @@ class CharacterImportanceServiceTest {
 
         List<CharacterImportanceDto> result = service.loadAll();
 
-        assertThat(result).usingRecursiveComparison().isEqualTo(characterImportances.stream().map(CharacterImportanceFactory::toDTO).collect(Collectors.toList()));
+        assertThat(result).usingRecursiveComparison().isEqualTo(characterImportances.stream().map(CharacterImportanceFactory::toDTO).toList());
     }
 
     @Test
@@ -47,7 +47,7 @@ class CharacterImportanceServiceTest {
 
         List<CharacterImportanceDto> result = service.loadAll();
 
-        assertThat(result).usingRecursiveComparison().isEqualTo(characterImportances.stream().map(CharacterImportanceFactory::toDTO).collect(Collectors.toList()));
+        assertThat(result).usingRecursiveComparison().isEqualTo(characterImportances.stream().map(CharacterImportanceFactory::toDTO).toList());
         assertThat(result).isEmpty();
     }
 
@@ -64,7 +64,7 @@ class CharacterImportanceServiceTest {
     @Test
     void loadCharacterImportance__inValidData__failure() {
         Optional<CharacterImportance> characterImportance = Optional.empty();
-        when(repository.findById(anyInt())).thenReturn(characterImportance);
+        when(repository.findById(anyLong())).thenReturn(characterImportance);
 
         assertThatThrownBy(() -> service.loadCharacterImportance(null)).isInstanceOf(FindDataException.class)
                 .hasMessage(String.format("Could not find Character Importance with id:%d.", null));
@@ -117,7 +117,7 @@ class CharacterImportanceServiceTest {
     @Test
     void delete__inValidData__failure() {
         Optional<CharacterImportance> characterImportanceEmpty = Optional.empty();
-        when(repository.findById(anyInt())).thenReturn(characterImportanceEmpty);
+        when(repository.findById(anyLong())).thenReturn(characterImportanceEmpty);
 
         assertThatThrownBy(() -> service.delete(TestEntities.NOT_GENERIC_ID))
                 .isInstanceOf(FindDataException.class)

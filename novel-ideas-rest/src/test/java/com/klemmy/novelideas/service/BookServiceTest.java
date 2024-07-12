@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -88,7 +88,7 @@ class BookServiceTest {
   @Test
   void loadBook__inValidData__failure() {
     Optional<Book> book = Optional.empty();
-    when(repository.findById(anyInt())).thenReturn(book);
+    when(repository.findById(anyLong())).thenReturn(book);
 
     assertThatThrownBy(() -> service.loadBook(null)).isInstanceOf(FindDataException.class)
         .hasMessage(String.format("Could not find Book with id:%d.", (Integer) null));
@@ -113,7 +113,7 @@ class BookServiceTest {
     List<CharacterProfileDto> result = service.getBookCharacter(TestEntities.GENERIC_ID);
 
     assertThat(result).usingRecursiveComparison().isEqualTo(characterProfile.stream()
-        .map(CharacterProfileFactory::toDTO).collect(Collectors.toList()));
+        .map(CharacterProfileFactory::toDTO).toList());
   }
 
   @Test
@@ -134,12 +134,12 @@ class BookServiceTest {
   void update__validData__success() throws FindDataException {
     BookDto update = TestEntities.bookDtoBuilder().build();
     Book book = TestEntities.bookBuilder().build();
-    when(repository.findById(anyInt())).thenReturn(Optional.ofNullable(book));
+    when(repository.findById(anyLong())).thenReturn(Optional.ofNullable(book));
     when(repository.save(any(Book.class))).thenReturn(book);
 
     BookDto result = service.update(update);
 
-    verify(repository).findById(anyInt());
+    verify(repository).findById(anyLong());
     assertThat(result).usingRecursiveComparison().isEqualTo(update);
     verify(repository).save(any(Book.class));
 
@@ -149,12 +149,12 @@ class BookServiceTest {
   void update__smallDataSet__success() throws FindDataException {
     BookDto bookDto = TestEntities.bookDtoSmallerBuilder().build();
     Book book = TestEntities.bookSmallerBuilder().build();
-    when(repository.findById(anyInt())).thenReturn(Optional.of(book));
+    when(repository.findById(anyLong())).thenReturn(Optional.of(book));
     when(repository.save(any(Book.class))).thenReturn(book);
 
     service.update(bookDto);
 
-    verify(repository).findById(anyInt());
+    verify(repository).findById(anyLong());
     verify(repository).save(any(Book.class));
 
   }
@@ -164,12 +164,12 @@ class BookServiceTest {
     BookDto bad = TestEntities.bookDtoBuilder().build();
     bad.setId(TestEntities.NOT_GENERIC_ID);
     Optional<Book> book = Optional.empty();
-    when(repository.findById(anyInt())).thenReturn(book);
+    when(repository.findById(anyLong())).thenReturn(book);
 
     assertThatThrownBy(() -> service.update(bad))
         .hasMessage(String.format("Could not find Book with id:%d, to update.", bad.getId()));
 
-    verify(repository).findById(anyInt());
+    verify(repository).findById(anyLong());
     verify(repository, never()).save(any(Book.class));
 
   }
@@ -178,7 +178,7 @@ class BookServiceTest {
   void update__nullData__failure() {
     BookDto bad = BookDto.builder().build();
     Optional<Book> book = Optional.empty();
-    when(repository.findById(anyInt())).thenReturn(book);
+    when(repository.findById(anyLong())).thenReturn(book);
 
     assertThatThrownBy(() -> service.update(bad))
         .isInstanceOf(FindDataException.class)
@@ -202,7 +202,7 @@ class BookServiceTest {
   @Test
   void delete__inValidData__failure() {
     Optional<Book> bookEmpty = Optional.empty();
-    when(repository.findById(anyInt())).thenReturn(bookEmpty);
+    when(repository.findById(anyLong())).thenReturn(bookEmpty);
 
     assertThatThrownBy(() -> service.delete(TestEntities.NOT_GENERIC_ID))
         .isInstanceOf(FindDataException.class)
@@ -217,35 +217,35 @@ class BookServiceTest {
     CharacterProfileDto newCharactorDto = TestEntities.characterProfileDtoBuilder2().build();
     CharacterProfile newCharactor = TestEntities.characterProfileBuilder2().build();
     Book book = TestEntities.bookBuilderNoChars().build();
-    when(repository.findById(anyInt())).thenReturn(Optional.ofNullable(book));
+    when(repository.findById(anyLong())).thenReturn(Optional.ofNullable(book));
     Book bookSaved = book.toBuilder().build();
     bookSaved.setCharacterProfiles(List.of(newCharactor));
     when(repository.save(any(Book.class))).thenReturn(bookSaved);
 
     BookDto result = service.addCharacter(TestEntities.GENERIC_ID, newCharactorDto);
 
-    verify(repository).findById(anyInt());
+    verify(repository).findById(anyLong());
     assertThat(result.getCharacterProfiles().stream().findFirst()).usingRecursiveComparison()
         .isEqualTo(Optional.of(newCharactorDto));
     verify(repository).save(any(Book.class));
 
   }
 
-  @Disabled
+  @Disabled("Because")
   @Test
   void removeCharacterFromBook__validData__success() throws FindDataException {
     Book book = TestEntities.bookBuilder().build();
     List<CharacterProfile> characterProfileList = List.of(TestEntities.characterProfileBuilder().build());
     Book bookSaved = TestEntities.bookBuilderNoChars().build();
     bookSaved.setCharacterProfiles(characterProfileList);
-    when(repository.findById(anyInt())).thenReturn(Optional.ofNullable(book));
+    when(repository.findById(anyLong())).thenReturn(Optional.ofNullable(book));
     when(repository.save(any(Book.class))).thenReturn(bookSaved);
 
     BookDto result = service.removeCharacter(TestEntities.GENERIC_ID, TestEntities.GENERIC_ID2);
 
-    verify(repository).findById(anyInt());
+    verify(repository).findById(anyLong());
     assertThat(result.getCharacterProfiles()).usingRecursiveComparison()
-        .isEqualTo(characterProfileList.stream().map(CharacterProfileFactory::toDTO).collect(Collectors.toList()));
+        .isEqualTo(characterProfileList.stream().map(CharacterProfileFactory::toDTO).toList());
     verify(repository).save(any(Book.class));
   }
 

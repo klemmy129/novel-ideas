@@ -1,15 +1,15 @@
 package com.klemmy.novelideas.api;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Null;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Null;
 import java.io.Serializable;
 import java.time.LocalDate;
 
@@ -18,7 +18,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Builder(toBuilder = true)
 @Schema(description = "Character Profile")
-public class CharacterProfileDto implements Serializable {
+public class CharacterProfileGridDto implements Serializable {
 
   @Null(groups = OnCreate.class)
   @NotNull(groups = OnUpdate.class)
@@ -30,9 +30,8 @@ public class CharacterProfileDto implements Serializable {
   private String middleName;
   private String surname;
   private String nickName;
-  private CharacterGenderDto gender;
-  @NotNull(message = "What Type or Importance is this character")
-  private CharacterImportanceDto characterImportance;
+  private String gender;
+  private String characterImportance;
   @Length(max = 4000)
   private String physicalDescription;
   @Length(max = 4000)

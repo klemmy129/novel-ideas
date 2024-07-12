@@ -1,6 +1,7 @@
 package com.klemmy.novelideas.controller;
 
 import com.klemmy.novelideas.api.CharacterProfileDto;
+import com.klemmy.novelideas.api.CharacterProfileGridDto;
 import com.klemmy.novelideas.api.OnCreate;
 import com.klemmy.novelideas.error.FindDataException;
 import com.klemmy.novelideas.service.CharacterProfileService;
@@ -16,17 +17,19 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
+
+
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-
-import jakarta.validation.Valid;
 
 @RestController
 @AllArgsConstructor
@@ -40,10 +43,10 @@ public class CharacterProfileController {
   @GetMapping("/")
   @Operation(summary = "Get all Characters", description = "List all the characters")
   @ApiResponse(responseCode = "400", description = "Invalid")
-  public Page<CharacterProfileDto> getAll(@RequestParam(required = false) String queryName,
-                                          @RequestParam(required = false) String importance,
-                                          @RequestParam(required = false) String gender,
-                                          @ParameterObject @PageableDefault(size = 20, sort = "characterName") Pageable pageable) {
+  public Page<CharacterProfileGridDto> getAll(@RequestParam(required = false) String queryName,
+                                              @RequestParam(required = false) String importance,
+                                              @RequestParam(required = false) String gender,
+                                              @ParameterObject @PageableDefault(size = 20, sort = "characterName") Pageable pageable) {
     return characterProfileService.loadAll(queryName, importance, gender, pageable);
   }
 
@@ -52,7 +55,7 @@ public class CharacterProfileController {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "400", description = "Invalid"),
       @ApiResponse(responseCode = "404", description = "Not Found")})
-  public CharacterProfileDto getCharacterProfile(@PathVariable Integer id) throws FindDataException {
+  public CharacterProfileGridDto getCharacterProfile(@PathVariable Long id) throws FindDataException {
     return characterProfileService.loadCharacterProfile(id);
   }
 
@@ -63,15 +66,15 @@ public class CharacterProfileController {
       @ApiResponse(responseCode = "201", description = "Created"),
       @ApiResponse(responseCode = "400", description = "Invalid")})
   @Validated(OnCreate.class)
-  public CharacterProfileDto create(@Valid @RequestBody CharacterProfileDto characterProfileDto) {
+  public CharacterProfileGridDto create(@Valid @RequestBody CharacterProfileDto characterProfileDto) throws FindDataException {
     return characterProfileService.create(characterProfileDto);
   }
 
-//    @PutMapping("/")
-//    @ApiResponse(responseCode = "400", description = "Invalid")
-//    public CharacterProfileDto update(@Valid @RequestBody CharacterProfileDto characterProfileDto){
-//        return characterProfileService.update(characterProfileDto);
-//    }
+  @PutMapping("/")
+  @ApiResponse(responseCode = "400", description = "Invalid")
+  public CharacterProfileGridDto update(@Valid @RequestBody CharacterProfileDto characterProfileDto) throws FindDataException {
+    return characterProfileService.update(characterProfileDto, characterProfileDto.getId());
+  }
 
   @DeleteMapping("/{id}")
   @Operation(summary = "Delete a Character",
@@ -80,7 +83,7 @@ public class CharacterProfileController {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "400", description = "Invalid"),
       @ApiResponse(responseCode = "404", description = "Not Found")})
-  public void delete(@PathVariable Integer id) throws FindDataException {
+  public void delete(@PathVariable Long id) throws FindDataException {
     characterProfileService.delete(id);
   }
 }

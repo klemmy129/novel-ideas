@@ -4,6 +4,22 @@ spring:
   mvc:
     problemdetails:
       enabled: true
+  ssl:
+    bundle:
+      pem:
+        web-server:
+          truststore:
+            certificate: ${TRUSTSTORE:/home/${user}/certs/myCA.pem}
+          keystore:
+            certificate: ${KEYSTORE-PUB:/home/${user}/certs/devcert.pem}
+            private-key: ${KEYSTORE-KEY:/home/${user}/certs/devcert.key}
+            private-key-password: ${KEYSTORE-PASSWORD}
+          options:
+            ciphers:
+              - TLS_AES_256_GCM_SHA384
+              - TLS_CHACHA20_POLY1305_SHA256
+            enabled-protocols: TLSv1.3
+
 info:
   app:
     # Get the version from the POM file and injected into SpringDoc Info
@@ -34,21 +50,7 @@ server:
   http2:
     enabled: true
   ssl:
-    enabled: true
-    trust-store: ${TRUSTSTORE:/home/${user}/certs/truststore.p12}
-    trust-store-password: ${TRUSTSTORE-PASSWORD}
-    trust-store-type: PKCS12
-    key-store: ${KEYSTORE:/home/${user}/certs/keystore.p12}
-    key-store-password: ${KEYSTORE-PASSWORD}
-    key-store-type: PKCS12
-    ciphers:
-      - TLS_ECDH_RSA_WITH_AES_256_GCM_SHA384
-      - ECDHE-RSA-AES256-SHA384
-      - ECDHE-RSA-AES256-GCM-SHA256
-      - ECDHE-RSA-AES256-GCM-SHA384
-    enabled-protocols:
-      - TLSv1.2
-      - TLSv1.3
+    bundle: "web-server"
 
 springdoc:
   swagger-ui:

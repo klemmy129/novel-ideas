@@ -27,7 +27,7 @@ public class NovelIdearsRestTemplateResponseErrorHandler implements ResponseErro
       // handle CLIENT_ERROR
       if (httpResponse.getStatusCode() == HttpStatus.NOT_FOUND) {
         try {
-          throw new FindDataException("Can not find it");
+          throw new FindDataException(new Throwable("Can not find it"));
         } catch (FindDataException e) {
           throw new RuntimeException(e);
         }

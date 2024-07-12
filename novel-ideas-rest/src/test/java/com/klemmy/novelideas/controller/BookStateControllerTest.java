@@ -25,7 +25,6 @@ class BookStateControllerTest {
   @Test
   @WithMockUser
   void getAll__success() throws Exception {
-    List<BookState> bookStates = Arrays.asList(BookState.values());
     this.mockMvc.perform(get("/book-state/"))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$[0]").value("ACTIVE"))

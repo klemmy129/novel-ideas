@@ -1,26 +1,26 @@
 server:
   servlet:
     context-path: "/"
-stomp:
-  url: ${MBUS_URL:127.0.0.1}
-  port: ${BUSPOST:61613}
-  account: ${WS_USERNAME:guest}
-  passcode: ${WS_PASSWD:guest}
+#stomp:
+#  url: ${MBUS_URL:127.0.0.1}
+#  port: ${BUSPOST:61613}
+#  account: ${WS_USERNAME:guest}
+#  passcode: ${WS_PASSWD:guest}
 spring:
   application:
     name: novel-ideas-v1
-  jpa:
-    database: h2
-    hibernate:
-      ddl-auto: update
-    properties:
-      hibernate:format_sql: true
-      dialect: org.hibernate.dialect.H2Dialect
-  datasource:
-#    url: jdbc:h2:./h2DB:default:PUBLIC;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE
-#    username: sa
-#    password:
-    driverClassName: org.h2.Driver
+#  jpa:
+#    database: h2
+#    hibernate:
+#      ddl-auto: update
+#    properties:
+#      hibernate:format_sql: true
+#      dialect: org.hibernate.dialect.H2Dialect
+#  datasource:
+##    url: jdbc:h2:./h2DB:default:PUBLIC;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE
+##    username: sa
+##    password:
+#    driverClassName: org.h2.Driver
   flyway:
     enabled: false
   mvc:
@@ -29,7 +29,7 @@ spring:
 
 info:
   app:
-    version: 1.5.0
+    version: Test
 
 #message-bus:
 #  type: none

@@ -5,6 +5,7 @@ import com.klemmy.novelideas.api.BookState;
 import com.klemmy.novelideas.api.CharacterGenderDto;
 import com.klemmy.novelideas.api.CharacterImportanceDto;
 import com.klemmy.novelideas.api.CharacterProfileDto;
+import com.klemmy.novelideas.api.CharacterProfileGridDto;
 import com.klemmy.novelideas.jpa.Book;
 import com.klemmy.novelideas.jpa.CharacterGender;
 import com.klemmy.novelideas.jpa.CharacterImportance;
@@ -19,9 +20,9 @@ import java.util.List;
 @Component
 public class TestEntities {
 
-  public static final Integer GENERIC_ID = 1;
-  public static final Integer GENERIC_ID2 = 2;
-  public static final Integer NOT_GENERIC_ID = 999;
+  public static final Long GENERIC_ID = 1L;
+  public static final Long GENERIC_ID2 = 2L;
+  public static final Long NOT_GENERIC_ID = 999L;
   public static final String GENERIC_VALUE = "AAAA";
   public static final String GENERIC_VALUE2 = "BBBB";
   public static final String CHAR_NAME = "John Doe";
@@ -199,6 +200,23 @@ public class TestEntities {
         .outerGoal(PARA2)
         .physicalDescription(PARA2);
   }
+  public static CharacterProfileGridDto.CharacterProfileGridDtoBuilder characterProfileFlatDtoBuilder() {
+    return CharacterProfileGridDto.builder()
+        .id(GENERIC_ID)
+        .title("Mr")
+        .characterName(CHAR_NAME)
+        .firstName(FIRST_NAME)
+        .middleName("X")
+        .surname(SURNAME)
+        .gender(GENDER_MALE)
+        .nickName("Joe")
+        .characterImportance(GENERIC_VALUE)
+        .dateOfBirth(PAST_DATE)
+        .functionInStory(PARA)
+        .innerGoal(PARA)
+        .outerGoal(PARA2)
+        .physicalDescription(PARA2);
+  }
 
   public static CharacterProfileDto.CharacterProfileDtoBuilder characterProfileDtoBuilder2() {
     return CharacterProfileDto.builder()
@@ -211,6 +229,24 @@ public class TestEntities {
         .gender(characterGenderDtoBuilder())
         .nickName("Janie")
         .characterImportance(characterImportanceDtoBuilder2())
+        .dateOfBirth(PAST_DATE)
+        .functionInStory(PARA2)
+        .innerGoal(PARA2)
+        .outerGoal(PARA)
+        .physicalDescription(PARA);
+  }
+
+  public static CharacterProfileGridDto.CharacterProfileGridDtoBuilder characterProfileFlatDtoBuilder2() {
+    return CharacterProfileGridDto.builder()
+        .id(GENERIC_ID2)
+        .title("Miss")
+        .characterName(CHAR_NAME2)
+        .firstName(FIRST_NAME2)
+        .middleName("X")
+        .surname(SURNAME2)
+        .gender(GENDER_MALE)
+        .nickName("Janie")
+        .characterImportance(GENERIC_VALUE)
         .dateOfBirth(PAST_DATE)
         .functionInStory(PARA2)
         .innerGoal(PARA2)

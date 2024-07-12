@@ -7,7 +7,7 @@ import java.io.Serializable;
 public record CharacterImportanceDto(
     @Null(groups = OnCreate.class)
     @NotNull(groups = OnUpdate.class)
-    Integer id,
+    Long id,
 
     @NotNull
     String importance,

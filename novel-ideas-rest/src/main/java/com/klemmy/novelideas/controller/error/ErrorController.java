@@ -17,43 +17,43 @@ import java.util.Objects;
 @RestControllerAdvice
 public class ErrorController {
 
-    @ExceptionHandler(ConstraintViolationException.class)
-    ProblemDetail onConstraintValidationException(ConstraintViolationException e) {
-        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, e.getMessage());
-        for (ConstraintViolation<?> violation : e.getConstraintViolations()) {
-            problemDetail.setProperty(violation.getPropertyPath().toString(), violation.getMessage());
-        }
-        return problemDetail;
+  @ExceptionHandler(ConstraintViolationException.class)
+  ProblemDetail onConstraintValidationException(ConstraintViolationException e) {
+    ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, e.getMessage());
+    for (ConstraintViolation<?> violation : e.getConstraintViolations()) {
+      problemDetail.setProperty(violation.getPropertyPath().toString(), violation.getMessage());
     }
+    return problemDetail;
+  }
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    ProblemDetail onMethodArgumentNotValidException(MethodArgumentNotValidException e) {
-        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, e.getMessage());
-        BindingResult result = e.getBindingResult();
-        for (FieldError f : result.getFieldErrors()) {
-            problemDetail.setProperty(f.getField(), Objects.requireNonNull(f.getCode()));
-        }
-        return problemDetail;
+  @ExceptionHandler(MethodArgumentNotValidException.class)
+  ProblemDetail onMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+    ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, e.getMessage());
+    BindingResult result = e.getBindingResult();
+    for (FieldError f : result.getFieldErrors()) {
+      problemDetail.setProperty(f.getField(), Objects.requireNonNull(f.getCode()));
     }
+    return problemDetail;
+  }
 
-    @ExceptionHandler(IllegalStateException.class)
-    ProblemDetail onIllegalStateException(IllegalStateException e) {
+  @ExceptionHandler(IllegalStateException.class)
+  ProblemDetail onIllegalStateException(IllegalStateException e) {
 
-        return ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, e.getMessage());
-    }
+    return ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, e.getMessage());
+  }
 
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ProblemDetail assertionException(final IllegalArgumentException e) {
+  @ExceptionHandler(IllegalArgumentException.class)
+  public ProblemDetail assertionException(final IllegalArgumentException e) {
 
-        return ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, e.getMessage());
-    }
+    return ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, e.getMessage());
+  }
 
-    @ExceptionHandler(FindDataException.class)
-    ProblemDetail onMethodArgumentNotValidException(FindDataException e) {
-        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, e.getMessage());
-        problemDetail.setProperty("id", e.getMessage());
+  @ExceptionHandler(FindDataException.class)
+  ProblemDetail onMethodArgumentNotValidException(FindDataException e) {
+    ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, e.getMessage());
+    problemDetail.setProperty("id", e.getId());
 
-        return problemDetail;
-    }
+    return problemDetail;
+  }
 
 }

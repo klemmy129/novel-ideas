@@ -14,12 +14,12 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.2.1</version>
+        <version>3.3.1</version>
          <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.klemmy</groupId>
     <artifactId>novel-ideas</artifactId>
-    <version>1.6.0</version>
+    <version>1.7.0</version>
     <name>novel-ideas</name>
     <description>Demo project for Spring Boot</description>
 
@@ -27,84 +27,17 @@
         <java.version>21</java.version>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
-
-<!--        <apache-httpclient5.version>5.2.1</apache-httpclient5.version>-->
-<!--        <apache-httpcore5.version>5.2.2</apache-httpcore5.version>-->
-        <codehaus-helper.version>3.4.0</codehaus-helper.version>
-<!--        <h2.version>2.2.222</h2.version>-->
-        <junit-launcher.version>1.10.1</junit-launcher.version>
-        <modelmapper.version>3.1.1</modelmapper.version>
-<!--        <okhttp.version>4.10.0</okhttp.version>-->
-        <spring-boot.version>3.2.1</spring-boot.version>
-        <springdoc.version>2.2.0</springdoc.version>
-        <swagger-v3.version>2.2.19</swagger-v3.version>
+        <codehaus-helper.version>3.6.0</codehaus-helper.version>
+        <junit-launcher.version>1.10.3</junit-launcher.version>
+        <modelmapper.version>3.2.0</modelmapper.version>
+        <spring-boot.version>3.3.1</spring-boot.version>
+        <springdoc.version>2.6.0</springdoc.version>
+        <swagger-v3.version>2.2.22</swagger-v3.version>
         <typescript-generator.version>3.2.1263</typescript-generator.version>
-<!--        <mockito.version>5.6.0</mockito.version>-->
-<!--        <junit-jupiter.version>5.9.3</junit-jupiter.version>-->
     </properties>
 
     <dependencyManagement>
         <dependencies>
-<!--            <dependency>-->
-<!--                <groupId>org.mockito</groupId>-->
-<!--                <artifactId>mockito-core</artifactId>-->
-<!--                <version>5.6.0</version>-->
-<!--                <scope>test</scope>-->
-<!--            </dependency>-->
-<!--            &lt;!&ndash; https://mvnrepository.com/artifact/org.mockito/mockito-junit-jupiter &ndash;&gt;-->
-<!--            <dependency>-->
-<!--                <groupId>org.mockito</groupId>-->
-<!--                <artifactId>mockito-junit-jupiter</artifactId>-->
-<!--                <version>5.6.0</version>-->
-<!--                <scope>test</scope>-->
-<!--            </dependency>-->
-<!--            &lt;!&ndash; https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter &ndash;&gt;-->
-<!--            <dependency>-->
-<!--                <groupId>org.junit.jupiter</groupId>-->
-<!--                <artifactId>junit-jupiter</artifactId>-->
-<!--                <version>5.9.3</version>-->
-<!--                <scope>test</scope>-->
-<!--            </dependency>-->
-<!--            <dependency>-->
-<!--                <groupId>org.junit.jupiter</groupId>-->
-<!--                <artifactId>junit-jupiter-api</artifactId>-->
-<!--                <version>5.9.3</version>-->
-<!--                <scope>test</scope>-->
-<!--            </dependency>-->
-<!--            <dependency>-->
-<!--                <groupId>org.junit.jupiter</groupId>-->
-<!--                <artifactId>junit-jupiter-engine</artifactId>-->
-<!--                <version>5.9.3</version>-->
-<!--                <scope>test</scope>-->
-<!--            </dependency>-->
-<!--            &lt;!&ndash; https://mvnrepository.com/artifact/org.junit.platform/junit-platform-engine &ndash;&gt;-->
-<!--            <dependency>-->
-<!--                <groupId>org.junit.platform</groupId>-->
-<!--                <artifactId>junit-platform-engine</artifactId>-->
-<!--                <version>1.9.3</version>-->
-<!--                <scope>test</scope>-->
-<!--            </dependency>-->
-<!--            &lt;!&ndash; https://mvnrepository.com/artifact/org.junit.platform/junit-platform-engine &ndash;&gt;-->
-<!--            <dependency>-->
-<!--                <groupId>org.junit.platform</groupId>-->
-<!--                <artifactId>junit-platform-commons</artifactId>-->
-<!--                <version>1.9.3</version>-->
-<!--                <scope>test</scope>-->
-<!--            </dependency>-->
-<!--            &lt;!&ndash; https://mvnrepository.com/artifact/org.junit.platform/junit-platform-engine &ndash;&gt;-->
-<!--            <dependency>-->
-<!--                <groupId>org.junit.platform</groupId>-->
-<!--                <artifactId>junit-platform-launcher</artifactId>-->
-<!--                <version>1.9.3</version>-->
-<!--                <scope>test</scope>-->
-<!--            </dependency>-->
-
-            <dependency>
-                <groupId>org.junit.jupiter</groupId>
-                <artifactId>junit-jupiter-params</artifactId>
-                <version>5.9.3</version>
-                <scope>test</scope>
-            </dependency>
             <dependency>
                 <groupId>com.h2database</groupId>
                 <artifactId>h2</artifactId>
@@ -153,11 +86,6 @@
                 <scope>compile</scope>
             </dependency>
             <dependency>
-                <groupId>com.squareup.okhttp3</groupId>
-                <artifactId>okhttp</artifactId>
-                <version>${okhttp.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>io.swagger.core.v3</groupId>
                 <artifactId>swagger-annotations</artifactId>
                 <version>${swagger-v3.version}</version>
@@ -184,43 +112,25 @@
                 <version>${jakarta-ws-rs.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.apache.httpcomponents.core5</groupId>
-                <artifactId>httpcore5</artifactId>
-                <version>${httpcore5.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.httpcomponents.client5</groupId>
-                <artifactId>httpclient5</artifactId>
-                <version>${httpclient5.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>org.flywaydb</groupId>
                 <artifactId>flyway-core</artifactId>
                 <version>${flyway.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.hibernate.orm</groupId>
+                <artifactId>hibernate-core</artifactId>
+                <version>${hibernate.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.hibernate.validator</groupId>
                 <artifactId>hibernate-validator</artifactId>
                 <version>${hibernate-validator.version}</version>
             </dependency>
-<!--            <dependency>-->
-<!--                <groupId>org.projectlombok</groupId>-->
-<!--                <artifactId>lombok</artifactId>-->
-<!--                <scope>provided</scope>-->
-<!--            </dependency>-->
             <dependency>
                 <groupId>org.modelmapper</groupId>
                 <artifactId>modelmapper</artifactId>
                 <version>${modelmapper.version}</version>
             </dependency>
-
-<!--            CVE workaround-->
-<!--            <dependency>-->
-<!--                <groupId>org.yaml</groupId>-->
-<!--                <artifactId>snakeyaml</artifactId>-->
-<!--                <version>2.2</version>-->
-<!--            </dependency>-->
-
             <dependency>
                 <groupId>org.springdoc</groupId>
                 <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
@@ -244,6 +154,18 @@
                 <groupId>org.junit.platform</groupId>
                 <artifactId>junit-platform-launcher</artifactId>
                 <version>${junit-launcher.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.testcontainers</groupId>
+                <artifactId>junit-jupiter</artifactId>
+                <version>${testcontainers.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.testcontainers</groupId>
+                <artifactId>oracle-free</artifactId>
+                <version>${testcontainers.version}</version>
                 <scope>test</scope>
             </dependency>
         </dependencies>

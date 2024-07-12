@@ -15,6 +15,12 @@ import jakarta.persistence.criteria.Root;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+ *  This Specification is NOT used anymore, but I thought I would leave it as a demo.
+ *  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+ */
+
 @AllArgsConstructor
 public class FilterCharacterSpecification implements Specification<CharacterProfile> {
 

@@ -1,18 +1,11 @@
 package com.klemmy.novelideas.client3;
 
-import com.klemmy.novelideas.api.BookState;
+
 import com.klemmy.novelideas.api.BookDto;
 import com.klemmy.novelideas.api.CharacterGenderDto;
-import org.springdoc.core.annotations.ParameterObject;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.service.annotation.GetExchange;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 public interface NovelIdeasClient3 {

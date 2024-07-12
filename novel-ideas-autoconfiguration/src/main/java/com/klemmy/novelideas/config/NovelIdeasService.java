@@ -1,66 +1,72 @@
 package com.klemmy.novelideas.config;
 
 import com.klemmy.novelideas.client3.NovelIdeasClient3;
-import io.netty.handler.ssl.SslContext;
-import io.netty.handler.ssl.SslContextBuilder;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.autoconfigure.web.client.RestClientSsl;
+import org.springframework.boot.autoconfigure.web.reactive.function.client.WebClientSsl;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.http.client.reactive.ReactorClientHttpConnector;
+import org.springframework.web.client.RestClient;
+import org.springframework.web.client.support.RestClientAdapter;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.support.WebClientAdapter;
-import org.springframework.http.client.reactive.ClientHttpConnector;
 import org.springframework.web.service.invoker.HttpServiceProxyFactory;
-import reactor.netty.http.client.HttpClient;
-
-import javax.net.ssl.TrustManagerFactory;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.cert.CertificateException;
 
 @Configuration
-@EnableConfigurationProperties({NovelIdeasClientProperties.class, SslProperties.class})
+@EnableConfigurationProperties({NovelIdeasClientProperties.class})
 @ConditionalOnProperty(name = "novel-ideas.url")
 public class NovelIdeasService {
 
   private final NovelIdeasClientProperties novelIdeasClientProperties;
-  private final SslProperties sslProperties;
+  private final WebClient webClient;
+  private final RestClient restClient;
 
-  public NovelIdeasService(NovelIdeasClientProperties novelIdeasClientProperties, SslProperties sslProperties) {
+
+  // This class is a demo way to show howto create a WebClient and a RestClient to use from another Rest service calling back to novel-idea.
+  public NovelIdeasService(NovelIdeasClientProperties novelIdeasClientProperties,
+                           WebClient.Builder webClientBuilder, WebClientSsl webSsl,
+                           RestClient.Builder restClientBuilder , RestClientSsl restSsl) {
     this.novelIdeasClientProperties = novelIdeasClientProperties;
-    this.sslProperties = sslProperties;
-  }
 
-  @Bean
-  NovelIdeasClient3 clientService() throws IOException, KeyStoreException, CertificateException, NoSuchAlgorithmException {
-    String trustStorePassword = sslProperties.trustStorePassword();
-    KeyStore trustStore = KeyStore.getInstance(sslProperties.trustStoreType());
-    trustStore.load(new FileInputStream(sslProperties.trustStore()), trustStorePassword.toCharArray());
-    TrustManagerFactory tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
-    tmf.init(trustStore);
-    SslContext sslContext = SslContextBuilder
-        .forClient()
-        .trustManager(tmf)
-        .build();
-    HttpClient httpClient = HttpClient.create().secure(ssl -> ssl.sslContext(sslContext));
-    ClientHttpConnector httpConnector = new ReactorClientHttpConnector(httpClient);
-
-    WebClient client = WebClient.builder()
+    this.webClient = webClientBuilder
         .baseUrl(novelIdeasClientProperties.url())
-        .clientConnector(httpConnector)
+        .apply(webSsl.fromBundle("web-server"))
         .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
         .build();
 
-    HttpServiceProxyFactory proxyFactory =
-        HttpServiceProxyFactory.builder(WebClientAdapter.forClient(client))
-            .build();
+    this.restClient = restClientBuilder
+        .baseUrl(novelIdeasClientProperties.url())
+        .apply(restSsl.fromBundle("web-server"))
+        .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+        .build();
+  }
 
+  // WebClient Started in Spring Framework 5, it is an asynchronous Servlet Stack and was an attempt to replacement to RestTemplate
+  @Bean("myWebClient")
+  NovelIdeasClient3 clientService() {
+// Changes:
+// Note1: HttpServiceProxyFactory.builder(HttpClientAdapter clientAdapter) was deprecated for will be removed in Spring Framework 6.2
+// Note2: WebClientAdapter.forClient(WebClient webClient) was deprecated for will be removed in Spring Framework 6.2
+    HttpServiceProxyFactory proxyFactory =
+        HttpServiceProxyFactory
+            .builderFor(WebClientAdapter.create(this.webClient))
+            .build();
+    return proxyFactory.createClient(NovelIdeasClient3.class);
+  }
+
+  // RestClient Started in Spring Framework 6.1, it is a synchronous Servlet Stack and a replacement to RestTemplate
+  @Bean("myRestClient")
+  NovelIdeasClient3 clientService2() {
+// Changes:
+// Note1: HttpServiceProxyFactory.builder(HttpClientAdapter clientAdapter) was deprecated for will be removed in Spring Framework 6.2
+// Note2: WebClientAdapter.forClient(WebClient webClient) was deprecated for will be removed in Spring Framework 6.2
+    HttpServiceProxyFactory proxyFactory =
+        HttpServiceProxyFactory
+            .builderFor(RestClientAdapter.create(this.restClient))
+            .build();
     return proxyFactory.createClient(NovelIdeasClient3.class);
   }
 }

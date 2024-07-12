@@ -34,7 +34,7 @@ public class CharacterProfile {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(nullable = false)
-  private Integer id;
+  private Long id;
 
   @NotBlank(message = "Must have a Character Name")
   private String characterName;

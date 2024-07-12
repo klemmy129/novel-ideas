@@ -1,0 +1,8 @@
+spring:
+  datasource:
+    url: jdbc:tc:oracle:slim-faststart:///TEST
+    username: novel
+    password: novel1
+  flyway:
+    locations: "classpath:db/migration/{vendor}"
+    enabled: true
