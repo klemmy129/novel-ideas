@@ -26,7 +26,7 @@ public class BookDto implements Serializable {
 
   @Null(groups = OnCreate.class)
   @NotNull(groups = OnUpdate.class)
-  private Integer id;
+  private Long id;
 
   @NotNull(message = "Need a Book Name")
   @Length(max = 255)

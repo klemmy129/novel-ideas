@@ -35,7 +35,7 @@ public class CharacterGender {
   @NotNull(groups = OnUpdate.class)
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Integer id;
+  private Long id;
 
   @NotNull
   @Column(nullable = false, unique = true)

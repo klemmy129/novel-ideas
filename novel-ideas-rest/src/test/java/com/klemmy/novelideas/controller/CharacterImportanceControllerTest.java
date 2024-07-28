@@ -73,7 +73,7 @@ class CharacterImportanceControllerTest {
     @Test
     @WithMockUser
     void getId__inValidId__failure() throws Exception {
-        doThrow(new FindDataException(String.format("Could not find Character Importance with id:%d.",
+        doThrow(new FindDataException(TestEntities.NOT_GENERIC_ID, String.format("Could not find Character Importance with id:%d.",
                 TestEntities.NOT_GENERIC_ID))).when(service).loadCharacterImportance(TestEntities.NOT_GENERIC_ID);
 
         this.mockMvc.perform(get("/character-importance/{id}", TestEntities.NOT_GENERIC_ID))
@@ -112,13 +112,13 @@ class CharacterImportanceControllerTest {
 
     }
 
-    @Disabled
+    @Disabled("Been lazy")
     @Test
     @WithMockUser
     void update__validData__success() {
     }
 
-    @Disabled
+    @Disabled("Been lazy")
     @Test
     @WithMockUser
     void update__nullId__failure() throws Exception {
@@ -145,7 +145,7 @@ class CharacterImportanceControllerTest {
     @WithMockUser
     void delete__inValidData__failure() throws Exception {
 
-        doThrow(new FindDataException(String.format("Could not find Character Importance with id:%d, to delete.",
+        doThrow(new FindDataException(TestEntities.NOT_GENERIC_ID, String.format("Could not find Character Importance with id:%d, to delete.",
                 TestEntities.NOT_GENERIC_ID))).when(service).delete(TestEntities.NOT_GENERIC_ID);
 
         this.mockMvc.perform(delete("/character-importance/" + TestEntities.NOT_GENERIC_ID))

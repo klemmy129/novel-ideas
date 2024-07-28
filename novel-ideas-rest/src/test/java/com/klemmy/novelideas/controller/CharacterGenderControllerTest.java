@@ -71,7 +71,7 @@ class CharacterGenderControllerTest {
     @Test
     @WithMockUser
     void getId__inValidId__failure() throws Exception {
-        doThrow(new FindDataException(String.format("Could not find Gender with id:%d.",
+        doThrow(new FindDataException(TestEntities.NOT_GENERIC_ID, String.format("Could not find Gender with id:%d.",
                 TestEntities.NOT_GENERIC_ID))).when(service).loadGender(TestEntities.NOT_GENERIC_ID);
 
         this.mockMvc.perform(get("/gender/" + TestEntities.NOT_GENERIC_ID))
@@ -151,7 +151,7 @@ class CharacterGenderControllerTest {
     @WithMockUser
     void delete__inValidData__failure() throws Exception {
 
-        doThrow(new FindDataException(String.format("Could not find Gender with id:%d, to delete.",
+        doThrow(new FindDataException(TestEntities.NOT_GENERIC_ID, String.format("Could not find Gender with id:%d, to delete.",
                 TestEntities.NOT_GENERIC_ID))).when(service).delete(TestEntities.NOT_GENERIC_ID);
 
         this.mockMvc.perform(delete("/gender/" + TestEntities.NOT_GENERIC_ID))

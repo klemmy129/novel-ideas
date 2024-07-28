@@ -11,7 +11,7 @@ public record CharacterGenderDto(
 
   @Null(groups = OnCreate.class)
   @NotNull(groups = OnUpdate.class)
-  Integer id,
+  Long id,
 
   @NotNull
   String gender,

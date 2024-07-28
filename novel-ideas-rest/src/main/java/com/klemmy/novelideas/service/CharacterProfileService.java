@@ -1,48 +1,49 @@
 package com.klemmy.novelideas.service;
 
 import com.klemmy.novelideas.api.CharacterProfileDto;
+import com.klemmy.novelideas.api.CharacterProfileGridDto;
 import com.klemmy.novelideas.api.OnCreate;
-import com.klemmy.novelideas.dto.CharacterProfileFactory;
+import com.klemmy.novelideas.database.CharacterProfileDao;
 import com.klemmy.novelideas.error.FindDataException;
-import com.klemmy.novelideas.jpa.CharacterProfile;
-import com.klemmy.novelideas.jpa.repository.CharacterProfileRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
-
-import java.util.Optional;
 
 @Service
 @AllArgsConstructor
 public class CharacterProfileService {
 
-  private final CharacterProfileRepository characterProfileRepository;
+  private final CharacterProfileDao characterProfileDao;
 
-  public Page<CharacterProfileDto> loadAll(String queryName,
+  public Page<CharacterProfileGridDto> loadAll(String queryName,
                                            String importance,
                                            String gender,
                                            Pageable pageable) {
-    return characterProfileRepository.findAllByFilters(queryName, importance, gender, pageable)
-        .map(CharacterProfileFactory::toDTO);
+    return characterProfileDao.findAllByFilters(queryName, importance, gender, pageable);
   }
 
-  public CharacterProfileDto loadCharacterProfile(Integer id) throws FindDataException {
-    Optional<CharacterProfile> characterProfile = characterProfileRepository.findById(id);
-    return CharacterProfileFactory.toDTO(characterProfile.orElseThrow(
-        () -> new FindDataException(String.format("Could not find Character Profile with id:%d.", id))));
+  public CharacterProfileGridDto loadCharacterProfile(Long id) throws FindDataException {
+    return characterProfileDao.findById(id);
   }
 
+  @Transactional
   @Validated(OnCreate.class)
-  public CharacterProfileDto create(CharacterProfileDto characterProfileDto) {
-    CharacterProfile characterProfile = CharacterProfileFactory.toEntity(characterProfileDto);
-    return CharacterProfileFactory.toDTO(characterProfileRepository.save(characterProfile));
+  public CharacterProfileGridDto create(CharacterProfileDto characterProfileDto) throws FindDataException {
+    Long id = characterProfileDao.create(characterProfileDto);
+    return characterProfileDao.findById(id);
   }
 
-  public void delete(Integer id) throws FindDataException {
-    Optional<CharacterProfile> characterProfile = characterProfileRepository.findById(id);
-    characterProfileRepository.delete(characterProfile.orElseThrow(
-        () -> new FindDataException(String.format("Could not find Character Profile with id:%d, to delete.", id))));
+  @Transactional
+  @Validated(OnCreate.class)
+  public CharacterProfileGridDto update(CharacterProfileDto characterProfileDto,Long id) throws FindDataException {
+    characterProfileDao.update(characterProfileDto, id);
+    return characterProfileDao.findById(id);
+  }
+
+  public void delete(Long id) throws FindDataException {
+    characterProfileDao.delete(id);
   }
 }

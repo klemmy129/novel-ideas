@@ -3,6 +3,7 @@ package com.klemmy.novelideas.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.klemmy.novelideas.TestEntities;
 import com.klemmy.novelideas.api.CharacterProfileDto;
+import com.klemmy.novelideas.api.CharacterProfileGridDto;
 import com.klemmy.novelideas.error.FindDataException;
 import com.klemmy.novelideas.service.CharacterProfileService;
 import org.junit.jupiter.api.Disabled;
@@ -55,9 +56,9 @@ class CharacterProfileControllerTest {
   @WithMockUser
   void getAll__withNoInputs__success() throws Exception {
     Pageable pageable = PageRequest.of(0, 5);
-    Page<CharacterProfileDto> dtoList = new PageImpl<>(List.of(
-        TestEntities.characterProfileDtoBuilder().build(),
-        TestEntities.characterProfileDtoBuilder2().build()),
+    Page<CharacterProfileGridDto> dtoList = new PageImpl<>(List.of(
+        TestEntities.characterProfileFlatDtoBuilder().build(),
+        TestEntities.characterProfileFlatDtoBuilder2().build()),
         pageable, 2);
     when(service.loadAll(eq(null), eq(null), eq(null), any(Pageable.class))).thenReturn(dtoList);
 
@@ -72,7 +73,7 @@ class CharacterProfileControllerTest {
   @WithMockUser
   void getAll__withInputs__success() throws Exception {
     Pageable pageable = PageRequest.of(0, 5);
-    Page<CharacterProfileDto> dtoList = new PageImpl<>(Collections.singletonList(TestEntities.characterProfileDtoBuilder().build()), pageable, 1);
+    Page<CharacterProfileGridDto> dtoList = new PageImpl<>(Collections.singletonList(TestEntities.characterProfileFlatDtoBuilder().build()), pageable, 1);
 
     //when(service.loadAll(eq(TestEntities.GENERIC_VALUE), eq(TestEntities.GENERIC_VALUE), eq(TestEntities.GENDER_MALE), any(Pageable.class))).thenReturn(dtoList);
     when(service.loadAll(anyString(), anyString(), anyString(), any())).thenReturn(dtoList);
@@ -93,7 +94,7 @@ class CharacterProfileControllerTest {
   @Test
   @WithMockUser
   void getId__validData__success() throws Exception {
-    CharacterProfileDto dto = TestEntities.characterProfileDtoBuilder().build();
+    CharacterProfileGridDto dto = TestEntities.characterProfileFlatDtoBuilder().build();
     when(service.loadCharacterProfile(dto.getId())).thenReturn(dto);
 
     this.mockMvc.perform(get("/character-profile/" + dto.getId()))
@@ -104,7 +105,7 @@ class CharacterProfileControllerTest {
   @Test
   @WithMockUser
   void getId__inValidId__failure() throws Exception {
-    doThrow(new FindDataException(String.format("Could not find Character Profile with id:%d.",
+    doThrow(new FindDataException(TestEntities.NOT_GENERIC_ID, String.format("Could not find Character Profile with id:%d.",
         TestEntities.NOT_GENERIC_ID))).when(service).loadCharacterProfile(TestEntities.NOT_GENERIC_ID);
 
     this.mockMvc.perform(get("/character-profile/" + TestEntities.NOT_GENERIC_ID))
@@ -117,13 +118,14 @@ class CharacterProfileControllerTest {
   @WithMockUser
   void create__validData__success() throws Exception {
     CharacterProfileDto dto = TestEntities.characterProfileDtoCreateBuilder().build();
-    when(service.create(any(CharacterProfileDto.class))).thenReturn(dto);
+    CharacterProfileGridDto result = TestEntities.characterProfileFlatDtoBuilder().build();
+    when(service.create(any(CharacterProfileDto.class))).thenReturn(result);
 
     this.mockMvc.perform(post("/character-profile/")
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .content(objectMapper.writeValueAsString(dto)))
         .andExpect(status().isCreated())
-        .andExpect(jsonPath("$.id").value(dto.getId()));
+        .andExpect(jsonPath("$.id").value(result.getId()));
   }
 
   @Test
@@ -144,13 +146,13 @@ class CharacterProfileControllerTest {
 
   }
 
-  @Disabled
+  @Disabled("Been lazy")
   @Test
   @WithMockUser
   void update__validData__success() {
   }
 
-  @Disabled
+  @Disabled("Been lazy")
   @Test
   @WithMockUser
   void update__nullId__failure() throws Exception {
@@ -176,7 +178,7 @@ class CharacterProfileControllerTest {
   @Test
   @WithMockUser
   void delete__inValidData__failure() throws Exception {
-    doThrow(new FindDataException(String.format("Could not find Character Profile with id:%d, to delete.",
+    doThrow(new FindDataException(TestEntities.NOT_GENERIC_ID, String.format("Could not find Character Profile with id:%d, to delete.",
         TestEntities.NOT_GENERIC_ID))).when(service).delete(TestEntities.NOT_GENERIC_ID);
 
     this.mockMvc.perform(delete("/character-profile/{id}", TestEntities.NOT_GENERIC_ID))

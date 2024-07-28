@@ -78,10 +78,12 @@ The frontend Demo to this application is [novel-ideas-iu](https://github.com/kle
 Note: All sample paths in this project are using Linux base.
 - Java 21
 - Maven
-- Spring Boot 3.2.1
+- Spring Boot 3.3.1
 - JPA/Hibernate
+- JDBC Template
+- JDBC Client
 - FlyWay
-  - Oracle 21c XE
+  - Oracle 21c XE / Oracle 23c Free
   - Postgres 13
   - H2
 - ActiveMQ 6 (Artemis) (Commented out)
@@ -98,24 +100,24 @@ Note: All sample paths in this project are using Linux base.
 * You can use `package` instead of `install`, if you are not running [novel-ghostwriter](https://github.com/klemmy129/novel-ghostwriter).
 
 ### For Oracle
-```
+```shell
 mvn clean install
 ```
 ### For PostgreSQL
-```
+```shell
 mvn clean install -P postgres
 ```
 ### For H2
-```
+```shell
 mvn clean install -P h2
 ```
-### Message Bus
+### Message Bus (Commented out - not using)
 #### ActiveMQ Artemis
 ##### Setup
 1. Download ActiveMQ Artemis binary from https://activemq.apache.org/download.html
 2. Uncompress the file. I recommend `/opt` and set `${ARTEMIS_HOME}` to the base path.
 3. Then in a terminal you need to create a broker. It will ask for a password
-```agsl
+```shell
 cd /var/lib
 ${ARTEMIS_HOME}/bin/artemis create mybroker
 ```
@@ -124,12 +126,6 @@ ${ARTEMIS_HOME}/bin/artemis create mybroker
 - To Stop" `/var/lib/mybroker/bin/artemis stop`
 - Web Management Console: http://localhost:8161/console/auth/login
 - Documentation I used was: https://activemq.apache.org/components/artemis/documentation/latest/
-
-#### RabbitMQ
-_COMING SOON_
-
-#### Kafka
-_COMING SOON_
 
 ### For Docker
 Added a basic docker file, but currently needs Kubernetes map the certificates into the Pod.
@@ -155,10 +151,71 @@ Eg `oracle,activemq,stomp`
 ### Environment Variables
 #### application.yml
 - PORT _default 10443_
-- TRUSTSTORE _default /home/${user}/certs/truststore.p12_
-- TRUSTSTORE-PASSWORD
-- KEYSTORE _default /home/${user}/certs/keystore.p12_
+- TRUSTSTORE  _default /home/${user}/certs/myCA.pem_
+- KEYSTORE-PUB _default /home/${user}/certs/devcert.pem_
+- KEYSTORE-KEY _default /home/${user}/certs/devcert.key_
 - KEYSTORE-PASSWORD
+
+##### Note 
+##### Spring Boot's SSL bundles
+I have moved from `server.ssl` certificates configuration to "Spring Boot's SSL bundles".
+In the past Java required binary key store e.g. JKS or PKCS#12. 
+Now you can use binary or text base Certificates i.e. PEM file.
+Spring Boot automates the creation of JKS like file for Java to use.
+In the example below it list all the certificates and passwords the app needs, 
+but down at the `server.ssl.bundle` I register the bundle that was configured in the `spring` section.
+
+Also under `options` I have configured the security protocol (TSL1.3) and the ciphers I want it to only use.
+
+I use a tool called `testssl` to validate my certificates and web server security configuration.
+
+Example:
+```yaml
+spring:
+  ssl:
+    bundle:
+      pem:
+        web-server:
+          truststore:
+            certificate: ${TRUSTSTORE:/home/${user}/certs/myCA.pem}
+          keystore:
+            certificate: ${KEYSTORE-PUB:/home/${user}/certs/devcert.pem}
+            private-key: ${KEYSTORE-KEY:/home/${user}/certs/devcert.key}
+            private-key-password: ${KEYSTORE-PASSWORD}
+          options:
+            ciphers:
+              - TLS_AES_256_GCM_SHA384
+              - TLS_CHACHA20_POLY1305_SHA256
+            enabled-protocols: TLSv1.3
+server:
+  servlet:
+    context-path: "/"
+  port: ${PORT:10443}
+  http2:
+    enabled: true
+  ssl:
+    bundle: "web-server"
+```
+Code using RestTemplate with bundle Example:
+```java
+ public RestConfiguration(RestTemplateBuilder restTemplateBuilder, SslBundles sslBundles) {
+    this.restTemplate = restTemplateBuilder.setSslBundle(sslBundles.getBundle("web-server")).build();
+  }
+```
+or RestClient using bundle Example [NovelIdeasService](novel-ideas-autoconfiguration/src/main/java/com/klemmy/novelideas/config/NovelIdeasService.java) and [NovelIdeasClient3](novel-ideas-client3/src/main/java/com/klemmy/novelideas/client3/NovelIdeasClient3.java):
+```java
+...
+RestClient restClient = restClientBuilder
+        .baseUrl(novelIdeasClientProperties.url())
+        .apply(restSsl.fromBundle("web-server"))
+        .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+        .build();
+...
+HttpServiceProxyFactory proxyFactory = HttpServiceProxyFactory
+                .builderFor(RestClientAdapter.create(restClient))
+                .build();
+return proxyFactory.createClient(NovelIdeasClient3.class);
+```
 
 #### application-oracle.yml
 - DB_URL _default jdbc:oracle:thin:@//localhost:1521/XEPDB1_
@@ -170,10 +227,10 @@ Eg `oracle,activemq,stomp`
 - DB_USERNAME _default novel_
 - DB_PASSWORD _default novel1_
 
-#### application-activemq.yml
+#### application-activemq.yml (not using)
 - MBUS_URL _default localhost
 
-#### application-stomp.yml
+#### application-stomp.yml (not using)
 - MBUS_URL _default 127.0.0.1
 - BUSPOST _default 61613
 - WS_USERNAME _default guest
@@ -203,7 +260,7 @@ I'm not going to go into Spring Boot Actuators.
 Here is a very simple example: https://localhost:10443/actuator/health/
 
 That should report:
-```
+```json
 {
 "status": "UP"
 }
@@ -257,17 +314,13 @@ The Property and Configuration classes used with the client are using multiple a
 #### novel-ideas-client-starter
 Just a `pom.xml` that you would include in another Java application that you are setting up the client via the Autoconfig to call this application.
 
-#### novel-ideas-jpa
-Database stuff.
-
-This module has the JPA repositories, specifications and models used with the repositories.
-
-
 #### novel-ideas-rest
-This module has RestControllers, Services, JPA repositories,specifications, models used with the repositories, DTO Factories, configuration to help setup the application context and main to start the application.
+This module has RestControllers, Services, JPA repositories,specifications, models used with the repositories, DAO, DTO Factories, configuration to help setup the application context and main to start the application.
 
 The controllers are the inputs and outputs to the public. Service are the business logic. 
 The Factories convert the API DTOs used be the controllers and transforms them into JPA models for the repositories. 
+
+This module has the JPA repositories, specifications and models used with the repositories.
 
 Some of the JPA repositories queries use specifications.
 
@@ -304,7 +357,7 @@ Example:
 public class BookController {
   private final BookService bookService;
 
-  public BookDto getBook(Integer id) {
+  public BookDto getBook(Long id) {
     return bookService.loadBook(id);
   }
 }
@@ -395,7 +448,7 @@ And here are some Property files
 - [NovelIdeasClientProperties](novel-ideas-autoconfiguration/src/main/java/com/klemmy/novelideas/config/NovelIdeasClientProperties.java)
 - [SslProperties](novel-ideas-autoconfiguration/src/main/java/com/klemmy/novelideas/config/SslProperties.java)
 
-### Message Bus
+### Message Bus (Commented Out - Not using)
 Novel-Ideas is the producer for a message bus and [novel-ghostwriter](https://github.com/klemmy129/novel-ghostwriter) is the consumer of the messages off the bus and displays it to the console. 
 
 By default, I have set `message-bus:type: none` which will load a dummy stub bean.
@@ -415,7 +468,7 @@ I create a custom banner file, named `banner.txt` in the `src/main/resources` wi
 Note banner.txt is the default expected banner file name, which Spring Boot uses. 
 However, if we want to choose any other location or another name for the banner, 
 we need to set the spring.banner.location property in the `application.yml` file:
-```
+```yaml
 banner:
   location: classpath:/path/mybanner.txt
 ```
@@ -449,7 +502,7 @@ I also created my own Error exception class [FindDataException](novel-ideas-api/
 ### Validation
 _COMING SOON_
 - Dto
-- JPA
+- JDBC
 - Controller
 
 ### Authorisation

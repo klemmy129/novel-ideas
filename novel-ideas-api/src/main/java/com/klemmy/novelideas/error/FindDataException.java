@@ -1,13 +1,19 @@
 package com.klemmy.novelideas.error;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(value = HttpStatus.NOT_FOUND)
+@Getter
+@Setter
 public class FindDataException extends Exception {
 
-  public FindDataException(String message) {
+  private Long id;
+  public FindDataException(Long id, String message) {
     super(message);
+    this.id = id;
   }
 
   public FindDataException(String message, Throwable cause) {

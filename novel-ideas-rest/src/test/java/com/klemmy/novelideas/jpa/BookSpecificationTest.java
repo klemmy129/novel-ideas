@@ -1,13 +1,12 @@
-package com.klemmy.novelideas.controller;
+package com.klemmy.novelideas.jpa;
 
 import com.klemmy.novelideas.TestEntities;
 import com.klemmy.novelideas.api.BookState;
-import com.klemmy.novelideas.jpa.Book;
 import com.klemmy.novelideas.jpa.repository.BookRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -15,15 +14,19 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlGroup;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
+import org.testcontainers.oracle.OracleContainer;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest
-@AutoConfigureMockMvc
-@ActiveProfiles("db")
+@DataJpaTest
+@Testcontainers
+@ActiveProfiles("oracle")
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @SqlGroup({
     @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = "classpath:BookTestData.sql"),
     @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:BookDataCleanup.sql")
@@ -32,6 +35,14 @@ class BookSpecificationTest {
 
   @Autowired
   BookRepository bookRepository;
+
+  @Container
+  private static final OracleContainer oracle = new OracleContainer("gvenzl/oracle-free:slim-faststart");
+
+  @Test
+  void top_level_container_should_be_running() {
+    assertThat(oracle.isRunning()).isTrue();
+  }
 
   @Test
   @WithMockUser

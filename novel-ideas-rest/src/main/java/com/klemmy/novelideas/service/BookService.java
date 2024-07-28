@@ -19,13 +19,12 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
 public class BookService {
 
-  private final String MSG = "Could not find Book with id:%d%s";
+  private static final String MSG = "Could not find Book with id:%d%s";
 
   private final BookRepository bookRepository;
 
@@ -37,10 +36,10 @@ public class BookService {
         .map(BookFactory::toDTO);
   }
 
-  public BookDto loadBook(Integer id) throws FindDataException {
+  public BookDto loadBook(Long id) throws FindDataException {
     Optional<Book> book = bookRepository.findById(id);
     BookDto bookDto = BookFactory.toDTO(book.orElseThrow(
-        () -> new FindDataException(String.format(MSG, id, "."))));
+        () -> new FindDataException(id, String.format(MSG, id, "."))));
 //    messageBus.sendMessage(bookDto);
     return bookDto;
   }
@@ -56,28 +55,28 @@ public class BookService {
       Book updatedBook = BookFactory.toEntity(bookDto);
       return BookFactory.toDTO(bookRepository.save(updatedBook));
     } else {
-      throw new FindDataException(String.format(MSG, bookDto.getId(), ", to update."));
+      throw new FindDataException(bookDto.getId(), String.format(MSG, bookDto.getId(), ", to update."));
     }
   }
 
-  public void delete(Integer id) throws FindDataException {
+  public void delete(Long id) throws FindDataException {
     Optional<Book> book = bookRepository.findById(id);
     bookRepository.delete(book.orElseThrow(
-        () -> new FindDataException(String.format(MSG, id, ", to delete."))));
+        () -> new FindDataException(id, String.format(MSG, id, ", to delete."))));
   }
 
-  public List<CharacterProfileDto> getBookCharacter(Integer id) throws FindDataException {
+  public List<CharacterProfileDto> getBookCharacter(Long id) throws FindDataException {
     Optional<List<CharacterProfile>> characterProfile = bookRepository.findBookById(id);
-    return characterProfile.orElseThrow(() -> new FindDataException(String.format(MSG, id, ".")))
+    return characterProfile.orElseThrow(() -> new FindDataException(id, String.format(MSG, id, ".")))
         .stream()
         .map(CharacterProfileFactory::toDTO)
-        .collect(Collectors.toList());
+        .toList();
 
   }
 
-  public BookDto addCharacter(Integer id, CharacterProfileDto characterProfileDto) throws FindDataException {
+  public BookDto addCharacter(Long id, CharacterProfileDto characterProfileDto) throws FindDataException {
     Optional<Book> book = bookRepository.findById(id);
-    Book updated = book.orElseThrow(() -> new FindDataException(String.format(MSG, id, ".")));
+    Book updated = book.orElseThrow(() -> new FindDataException(id, String.format(MSG, id, ".")));
     List<CharacterProfile> characterProfileList = updated.getCharacterProfiles() != null ? updated.getCharacterProfiles() : new ArrayList<>();
     characterProfileList.add(CharacterProfileFactory.toEntity(characterProfileDto));
     updated.setCharacterProfiles(characterProfileList);
@@ -85,9 +84,9 @@ public class BookService {
 
   }
 
-  public BookDto removeCharacter(Integer bookId, Integer characterProfileId) throws FindDataException {
+  public BookDto removeCharacter(Long bookId, Long characterProfileId) throws FindDataException {
     Optional<Book> book = bookRepository.findById(bookId);
-    Book updated = book.orElseThrow(() -> new FindDataException(String.format(MSG, bookId, ".")));
+    Book updated = book.orElseThrow(() -> new FindDataException(bookId, String.format(MSG, bookId, ".")));
     List<CharacterProfile> characterProfileList = updated.getCharacterProfiles() != null ? updated.getCharacterProfiles() : new ArrayList<>();
     //TODO UnsupportedOperationException
     characterProfileList.removeIf(chId -> chId.getId().equals(characterProfileId));

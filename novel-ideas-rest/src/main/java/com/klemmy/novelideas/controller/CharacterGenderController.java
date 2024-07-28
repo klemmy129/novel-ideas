@@ -48,7 +48,7 @@ public class CharacterGenderController {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "400", description = "Invalid"),
       @ApiResponse(responseCode = "404", description = "Not Found")})
-  public CharacterGenderDto getGender(@PathVariable Integer id) throws FindDataException {
+  public CharacterGenderDto getGender(@PathVariable Long id) throws FindDataException {
     return characterGenderService.loadGender(id);
   }
 
@@ -77,7 +77,7 @@ public class CharacterGenderController {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "400", description = "Invalid"),
       @ApiResponse(responseCode = "404", description = "Not Found")})
-  public void delete(@PathVariable @Min(1) Integer id) throws FindDataException {
+  public void delete(@PathVariable @Min(1) Long id) throws FindDataException {
     characterGenderService.delete(id);
   }
 

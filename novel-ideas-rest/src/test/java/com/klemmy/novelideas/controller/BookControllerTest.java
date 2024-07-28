@@ -28,7 +28,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
@@ -114,7 +114,7 @@ class BookControllerTest {
   @Test
   @WithMockUser
   void getId__inValidId__failure() throws Exception {
-    doThrow(new FindDataException(String.format("Could not find Book with id:%d.",
+    doThrow(new FindDataException(TestEntities.NOT_GENERIC_ID, String.format("Could not find Book with id:%d.",
         TestEntities.NOT_GENERIC_ID))).when(service).loadBook(TestEntities.NOT_GENERIC_ID);
 
     this.mockMvc.perform(get("/book/" + TestEntities.NOT_GENERIC_ID))
@@ -207,7 +207,7 @@ class BookControllerTest {
   void addCharacterToBook__validData__success() throws Exception {
     CharacterProfileDto CharacterDto = TestEntities.characterProfileDtoBuilder().build();
     BookDto bookDto = TestEntities.bookBuilderDtoOneChars().build();
-    when(service.addCharacter(anyInt(), any(CharacterProfileDto.class))).thenReturn(bookDto);
+    when(service.addCharacter(anyLong(), any(CharacterProfileDto.class))).thenReturn(bookDto);
 
     this.mockMvc.perform(put("/book/{bookId}/character", TestEntities.GENERIC_ID)
             .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -226,7 +226,7 @@ class BookControllerTest {
   @WithMockUser
   void removeCharacterToBook__validData__success() throws Exception {
     BookDto bookDto = TestEntities.bookBuilderDtoOneChars().build();
-    when(service.removeCharacter(anyInt(), anyInt())).thenReturn(bookDto);
+    when(service.removeCharacter(anyLong(), anyLong())).thenReturn(bookDto);
 
     this.mockMvc.perform(put("/book/{bookId}/character/{characterId}",
             TestEntities.GENERIC_ID, TestEntities.GENERIC_ID2)
@@ -251,7 +251,7 @@ class BookControllerTest {
   @Test
   @WithMockUser
   void delete__inValidData__failure() throws Exception {
-    doThrow(new FindDataException(String.format("Could not find Book with id:%d, to delete.",
+    doThrow(new FindDataException(TestEntities.NOT_GENERIC_ID, String.format("Could not find Book with id:%d, to delete.",
         TestEntities.NOT_GENERIC_ID))).when(service).delete(TestEntities.NOT_GENERIC_ID);
 
     this.mockMvc.perform(delete("/book/" + TestEntities.NOT_GENERIC_ID))

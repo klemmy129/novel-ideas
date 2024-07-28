@@ -64,7 +64,7 @@ public class BookController {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "400", description = "Invalid"),
       @ApiResponse(responseCode = "404", description = "Not Found")})
-  public BookDto getBook(@PathVariable Integer id) throws FindDataException {
+  public BookDto getBook(@PathVariable Long id) throws FindDataException {
     return bookService.loadBook(id);
   }
 
@@ -73,7 +73,7 @@ public class BookController {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "400", description = "Invalid"),
       @ApiResponse(responseCode = "404", description = "Not Found")})
-  public List<CharacterProfileDto> getBookCharacters(@PathVariable Integer id) throws FindDataException {
+  public List<CharacterProfileDto> getBookCharacters(@PathVariable Long id) throws FindDataException {
     return bookService.getBookCharacter(id);
   }
 
@@ -100,7 +100,7 @@ public class BookController {
   @Operation(summary = "Add a Character to a Book",
       description = "Add a Character to a book that represents a novel or script")
   @ApiResponse(responseCode = "400", description = "Invalid")
-  public BookDto addCharacterToBook(@PathVariable @Parameter(required = true, description = "Book Id") Integer bookId,
+  public BookDto addCharacterToBook(@PathVariable @Parameter(required = true, description = "Book Id") Long bookId,
                                     @RequestBody @Parameter(required = true, description = "Character Profile") @Valid CharacterProfileDto characterProfileDto) throws FindDataException {
     return bookService.addCharacter(bookId, characterProfileDto);
   }
@@ -110,8 +110,8 @@ public class BookController {
       description = "Remove a Character from a book that represents a novel or script")
   @ApiResponse(responseCode = "400", description = "Invalid")
   public BookDto removeCharacterToBook(
-      @PathVariable @Parameter(required = true, description = "Book Id") Integer bookId,
-      @PathVariable @Parameter(required = true, description = "Character Id") Integer characterId) throws FindDataException {
+      @PathVariable @Parameter(required = true, description = "Book Id") Long bookId,
+      @PathVariable @Parameter(required = true, description = "Character Id") Long characterId) throws FindDataException {
     return bookService.removeCharacter(bookId, characterId);
   }
 
@@ -121,7 +121,7 @@ public class BookController {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "400", description = "Invalid"),
       @ApiResponse(responseCode = "404", description = "Not Found")})
-  public void deleteBook(@PathVariable Integer id) throws FindDataException {
+  public void deleteBook(@PathVariable Long id) throws FindDataException {
     bookService.delete(id);
   }
 

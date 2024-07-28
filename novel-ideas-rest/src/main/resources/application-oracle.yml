@@ -4,10 +4,10 @@ spring:
     hibernate:
       ddl-auto: validate
     properties:
-      hibernate:format_sql: true
-      dialect: org.hibernate.dialect.Oracle12gDialect
+      hibernate:
+        format_sql: true
   datasource:
-    url: ${DB_URL:jdbc:oracle:thin:@//localhost:1521/XEPDB1}
+    url: ${DB_URL:jdbc:oracle:thin:@//localhost:1521/NIPDB}
     username: ${DB_USERNAME:novel}
     password: ${DB_PASSWORD:novel1}
     driver-class-name: oracle.jdbc.OracleDriver
@@ -16,4 +16,4 @@ spring:
     password: ${DB_PASSWORD:novel1}
     locations: "classpath:db/migration/{vendor}"
     enabled: true
-    url: ${DB_URL:jdbc:oracle:thin:@//localhost:1521/XEPDB1}
+    url: ${DB_URL:jdbc:oracle:thin:@//localhost:1521/NIPDB}

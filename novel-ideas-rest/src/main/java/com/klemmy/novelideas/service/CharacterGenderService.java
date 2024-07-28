@@ -3,65 +3,60 @@ package com.klemmy.novelideas.service;
 import com.klemmy.novelideas.api.CharacterGenderDto;
 import com.klemmy.novelideas.api.OnCreate;
 import com.klemmy.novelideas.api.OnUpdate;
-import com.klemmy.novelideas.dto.CharacterGenderFactory;
+import com.klemmy.novelideas.database.CharacterGenderDao;
 import com.klemmy.novelideas.error.FindDataException;
-import com.klemmy.novelideas.jpa.CharacterGender;
-import com.klemmy.novelideas.jpa.repository.CharacterGenderRepository;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
 import jakarta.validation.Valid;
+
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @Validated
 public class CharacterGenderService {
 
-  private final CharacterGenderRepository characterGenderRepository;
+  private final CharacterGenderDao characterGenderDao;
 
-  public CharacterGenderService(CharacterGenderRepository characterGenderRepository) {
-    this.characterGenderRepository = characterGenderRepository;
+  public CharacterGenderService(CharacterGenderDao characterGenderDao) {
+    this.characterGenderDao = characterGenderDao;
 
   }
 
   public List<CharacterGenderDto> loadAll() {
-    return characterGenderRepository.findByIsDeletedFalse()
+    return characterGenderDao.findAll()
         .stream()
-        .map(CharacterGenderFactory::toDTO)
-        .collect(Collectors.toList());
+        .toList();
   }
 
-  public CharacterGenderDto loadGender(Integer id) throws FindDataException {
-    Optional<CharacterGender> gender = characterGenderRepository.findById(id);
-    return CharacterGenderFactory.toDTO(gender.orElseThrow(() -> new FindDataException(
-        String.format("Could not find Gender with id:%d.", id))));
+  public CharacterGenderDto loadGender(Long id) throws FindDataException {
+    try {
+      return characterGenderDao.findById(id);
+    } catch (DataAccessException e) {
+     // throw new FindDataException(String.format("Could not find Gender with id %d.", id));
+      throw new FindDataException(id, e.getMessage());
+    }
   }
 
+  @Transactional
   @Validated(OnCreate.class)
   public CharacterGenderDto create(@Valid CharacterGenderDto characterGenderDto) {
-    CharacterGender characterGender = CharacterGenderFactory.toEntity(characterGenderDto);
-    return CharacterGenderFactory.toDTO(characterGenderRepository.save(characterGender));
+    Long id = characterGenderDao.create(characterGenderDto);
+    return characterGenderDao.findById(id);
   }
 
+  @Transactional
   @Validated(OnUpdate.class)
-  public CharacterGenderDto update(@Valid CharacterGenderDto characterGenderDto) throws FindDataException {
-    Optional<CharacterGender> gender = characterGenderRepository.findById(characterGenderDto.id());
-    if (gender.isPresent()) {
-      CharacterGender updatedCharacterGender = CharacterGenderFactory.toEntity(characterGenderDto);
-      return CharacterGenderFactory.toDTO(characterGenderRepository.save(updatedCharacterGender));
-    } else {
-      throw new FindDataException(
-          String.format("Could not find Gender with id:%d, to update.", characterGenderDto.id()));
-    }
-
+  public CharacterGenderDto update(@Valid CharacterGenderDto characterGenderDto) throws DataAccessException, FindDataException {
+    characterGenderDao.update(characterGenderDto, characterGenderDto.id());
+    return characterGenderDao.findById(characterGenderDto.id());
   }
 
-  public void delete(Integer id) throws FindDataException {
-    Optional<CharacterGender> gender = characterGenderRepository.findById(id);
-    characterGenderRepository.delete(gender.orElseThrow(
-        () -> new FindDataException(String.format("Could not find Gender with id:%d, to delete.", id))));
+  @Transactional
+  public void delete(Long id) throws FindDataException {
+    characterGenderDao.delete(id);
   }
 
 }

@@ -18,7 +18,7 @@ public class BookFactory {
         .startDate(entity.getStartDate())
         .state(entity.getState())
         .characterProfiles(entity.getCharacterProfiles() != null ? entity.getCharacterProfiles().stream()
-            .map(CharacterProfileFactory::toDTO).collect(Collectors.toList()) : Collections.emptyList())
+            .map(CharacterProfileFactory::toDTO).toList() : Collections.emptyList())
         .build();
   }
 
@@ -30,7 +30,7 @@ public class BookFactory {
         .startDate(dto.getStartDate())
         .state(dto.getState())
         .characterProfiles(dto.getCharacterProfiles() != null ? dto.getCharacterProfiles().stream()
-            .map(CharacterProfileFactory::toEntity).collect(Collectors.toList()) : Collections.emptyList())
+            .map(CharacterProfileFactory::toEntity).toList() : Collections.emptyList())
         .build();
   }
 

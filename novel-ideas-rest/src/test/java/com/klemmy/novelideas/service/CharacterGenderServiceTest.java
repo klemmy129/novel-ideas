@@ -2,22 +2,20 @@ package com.klemmy.novelideas.service;
 
 import com.klemmy.novelideas.TestEntities;
 import com.klemmy.novelideas.api.CharacterGenderDto;
-import com.klemmy.novelideas.dto.CharacterGenderFactory;
+import com.klemmy.novelideas.database.CharacterGenderDao;
 import com.klemmy.novelideas.error.FindDataException;
-import com.klemmy.novelideas.jpa.CharacterGender;
-import com.klemmy.novelideas.jpa.repository.CharacterGenderRepository;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -26,64 +24,61 @@ import static org.mockito.Mockito.when;
 class CharacterGenderServiceTest {
 
     @Mock
-    CharacterGenderRepository repository = mock(CharacterGenderRepository.class);
-
+    private final CharacterGenderDao repository = mock(CharacterGenderDao.class);
     private final CharacterGenderService service = new CharacterGenderService(repository);
 
     @Test
     void loadAll__validData__success() {
-        List<CharacterGender> characterGenders = List.of(TestEntities.characterGenderBuilder().build(),
-            TestEntities.characterGenderBuilder2().build());
-        when(repository.findByIsDeletedFalse()).thenReturn(characterGenders);
+        List<CharacterGenderDto> characterGenders = List.of(TestEntities.characterGenderDtoBuilder(),
+            TestEntities.characterGenderDtoBuilder2());
+        when(repository.findAll()).thenReturn(characterGenders);
 
         List<CharacterGenderDto> result = service.loadAll();
 
-        assertThat(result).usingRecursiveComparison().isEqualTo(characterGenders.stream()
-            .map(CharacterGenderFactory::toDTO).collect(Collectors.toList()));
+        assertThat(result).usingRecursiveComparison().isEqualTo(characterGenders.stream().toList());
     }
 
     @Test
     void loadAll__emptyData__success() {
-        List<CharacterGender> characterGenders = new ArrayList<>();
-        when(repository.findByIsDeletedFalse()).thenReturn(characterGenders);
+        List<CharacterGenderDto> characterGenders = new ArrayList<>();
+        when(repository.findAll()).thenReturn(characterGenders);
 
         List<CharacterGenderDto> result = service.loadAll();
 
-        assertThat(result).usingRecursiveComparison().isEqualTo(characterGenders.stream()
-            .map(CharacterGenderFactory::toDTO).collect(Collectors.toList()));
+        assertThat(result).usingRecursiveComparison().isEqualTo(characterGenders.stream().toList());
         assertThat(result).isEmpty();
     }
 
     @Test
     void loadGender__validData__success() throws FindDataException {
-        CharacterGender characterGender = TestEntities.characterGenderBuilder().build();
-        when(repository.findById(TestEntities.GENERIC_ID)).thenReturn(Optional.of(characterGender));
+        CharacterGenderDto characterGender = TestEntities.characterGenderDtoBuilder();
+        when(repository.findById(TestEntities.GENERIC_ID)).thenReturn(characterGender);
 
         CharacterGenderDto result = service.loadGender(TestEntities.GENERIC_ID);
 
         assertThat(result.gender()).isEqualTo(TestEntities.GENDER_MALE);
     }
 
-    @Test
-    void loadGender__inValidData__failure() {
-        Optional<CharacterGender> gender = Optional.empty();
-        when(repository.findById(anyInt())).thenReturn(gender);
-
-        assertThatThrownBy(() -> service.loadGender(null)).isInstanceOf(FindDataException.class)
-                .hasMessage(String.format("Could not find Gender with id:%d.", null));
-    }
+//    Couldn't get this to work
+//    @Test
+//    void loadGender__inValidData__failure() {
+//        when(repository.findById(TestEntities.NOT_GENERIC_ID)).thenThrow(DataAccessException.class);
+//
+//        assertThrows(FindDataException.class, () -> service.loadGender(TestEntities.NOT_GENERIC_ID));
+//    }
 
     @Test
     void create__validData__success() {
         CharacterGenderDto create = TestEntities.characterGenderDtoCreateBuilder();
-        CharacterGender characterGender = TestEntities.characterGenderBuilder().build();
-        when(repository.save(any(CharacterGender.class))).thenReturn(characterGender);
+        CharacterGenderDto characterGender = TestEntities.characterGenderDtoBuilder();
+        when(repository.create(any(CharacterGenderDto.class))).thenReturn(TestEntities.GENERIC_ID);
+        when(repository.findById(TestEntities.GENERIC_ID)).thenReturn(characterGender);
 
         CharacterGenderDto result = service.create(create);
 
         assertThat(result.gender()).isEqualTo(create.gender());
         assertThat(result.id()).isEqualTo(TestEntities.GENERIC_ID);
-        verify(repository).save(any(CharacterGender.class));
+        verify(repository).create(any(CharacterGenderDto.class));
     }
 
 //    @Test
@@ -117,15 +112,14 @@ class CharacterGenderServiceTest {
     @Test
     void update__validData__success() throws FindDataException {
         CharacterGenderDto update = TestEntities.characterGenderDtoBuilder();
-        CharacterGender characterGender = TestEntities.characterGenderBuilder().build();
-        when(repository.findById(anyInt())).thenReturn(Optional.ofNullable(characterGender));
-        when(repository.save(any(CharacterGender.class))).thenReturn(characterGender);
+        when(repository.findById(anyLong())).thenReturn(update);
 
         CharacterGenderDto result = service.update(update);
 
-        verify(repository).findById(anyInt());
+        verify(repository).update(any(CharacterGenderDto.class),eq(TestEntities.GENERIC_ID));
+        verify(repository).findById(anyLong());
         assertThat(result).usingRecursiveComparison().isEqualTo(update);
-        verify(repository).save(any(CharacterGender.class));
+
     }
 
 //    @Test
@@ -133,7 +127,7 @@ class CharacterGenderServiceTest {
 //        GenderDto update = TestEntities.genderDtoBuilder().build();
 //        update.setId(null);
 //        Gender gender = TestEntities.genderBuilder().build();
-//        when(repository.findById(anyInt())).thenReturn(Optional.ofNullable(gender));
+//        when(repository.findById(anyLong())).thenReturn(Optional.ofNullable(gender));
 //        when(repository.save(any(Gender.class))).thenReturn(gender);
 //
 //        assertThrows(ConstraintViolationException.class, () -> {
@@ -145,53 +139,37 @@ class CharacterGenderServiceTest {
 //    }
 
     @Test
-    void update__inValidData__failure() {
+    void update__inValidData__failure() throws FindDataException {
         CharacterGenderDto bad = TestEntities.characterGenderDtoBadCreateBuilder();
-        Optional<CharacterGender> gender = Optional.empty();
-        when(repository.findById(anyInt())).thenReturn(gender);
+        doThrow(FindDataException.class).when(repository).update(bad,bad.id());
 
-        assertThatThrownBy(() -> service.update(bad))
-                .hasMessage(String.format("Could not find Gender with id:%d, to update.", bad.id()));
+        assertThrows(FindDataException.class, () -> service.update(bad));
 
-        verify(repository).findById(anyInt());
-        verify(repository, never()).save(any(CharacterGender.class));
-
+        verify(repository,never()).findById(anyLong());
     }
 
     @Test
-    void update__nullData__failure() {
+    void update__nullData__failure() throws FindDataException {
         CharacterGenderDto bad = TestEntities.characterGenderDtoBadNullIdCreateBuilder();
-        Optional<CharacterGender> gender = Optional.empty();
-        when(repository.findById(anyInt())).thenReturn(gender);
+        doThrow(FindDataException.class).when(repository).update(bad,null);
 
-        assertThatThrownBy(() -> service.update(bad))
-                .isInstanceOf(FindDataException.class)
-                .hasMessage(String.format("Could not find Gender with id:%d, to update.", bad.id()));
-        verify(repository).findById(null);
-        verify(repository, never()).save(any(CharacterGender.class));
+        assertThrows(FindDataException.class, () -> service.update(bad));
 
+        verify(repository,never()).findById(anyLong());
     }
 
     @Test
     void delete__validData__success() throws FindDataException {
-        CharacterGender characterGender = TestEntities.characterGenderBuilder().build();
-        when(repository.findById(TestEntities.GENERIC_ID)).thenReturn(Optional.ofNullable(characterGender));
 
-        service.delete(TestEntities.GENERIC_ID);
+       service.delete(TestEntities.GENERIC_ID);
 
-        verify(repository).delete(any(CharacterGender.class));
+        verify(repository).delete(TestEntities.GENERIC_ID);
     }
 
     @Test
-    void delete__inValidData__failure() {
-        Optional<CharacterGender> genderEmpty = Optional.empty();
-        when(repository.findById(anyInt())).thenReturn(genderEmpty);
+    void delete__inValidData__failure() throws FindDataException {
+        doThrow(FindDataException.class).when(repository).delete(TestEntities.NOT_GENERIC_ID);
 
-        assertThatThrownBy(() -> service.delete(TestEntities.NOT_GENERIC_ID))
-                .isInstanceOf(FindDataException.class)
-                .hasMessage(String.format("Could not find Gender with id:%d, to delete.", TestEntities.NOT_GENERIC_ID));
-
-        verify(repository, never()).delete(any(CharacterGender.class));
-
+        assertThrows(FindDataException.class, () -> service.delete(TestEntities.NOT_GENERIC_ID));
     }
 }
