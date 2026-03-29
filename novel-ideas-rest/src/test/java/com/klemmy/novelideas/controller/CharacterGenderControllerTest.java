@@ -1,20 +1,20 @@
 package com.klemmy.novelideas.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.klemmy.novelideas.TestEntities;
 import com.klemmy.novelideas.api.CharacterGenderDto;
 import com.klemmy.novelideas.error.FindDataException;
 import com.klemmy.novelideas.service.CharacterGenderService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import jakarta.validation.ConstraintViolationException;
+import tools.jackson.databind.ObjectMapper;
 
 import java.util.List;
 
@@ -40,7 +40,7 @@ class CharacterGenderControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @MockBean
+    @MockitoBean
     private CharacterGenderService service;
 
     @Test

@@ -37,6 +37,7 @@ public class CharacterImportance {
   @Column(nullable = false)
   private String importance;
 
+  @Builder.Default
   @Column(name = "is_deleted", nullable = false)
   private boolean isDeleted = Boolean.FALSE;
 

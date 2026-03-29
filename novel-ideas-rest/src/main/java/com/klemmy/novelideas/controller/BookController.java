@@ -46,7 +46,7 @@ public class BookController {
 
   private final BookService bookService;
 
-  @GetMapping("/")
+  @GetMapping(value ="/", produces = MediaType.APPLICATION_JSON_VALUE)
   @Operation(summary = "Get all Books", description = "List all the Books that represents a novel or script")
   @ApiResponse(responseCode = "400", description = "Invalid")
   public Page<BookDto> getAll(@RequestParam(required = false) String queryTitle,
