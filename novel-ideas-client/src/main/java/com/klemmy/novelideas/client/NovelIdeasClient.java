@@ -9,6 +9,7 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -37,7 +38,7 @@ public class NovelIdeasClient {
                                                    @DefaultValue(value = "20") String size,
                                                    @DefaultValue(value = "name:ASC") Sort sort) {
 
-    UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromHttpUrl(baseUrl)
+    UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromUriString(baseUrl)
         .path(BOOK_BASE)
         .queryParamIfPresent("queryTitle", Optional.ofNullable(queryTitle))
         .queryParamIfPresent("startDate", Optional.ofNullable(startDate))
@@ -53,11 +54,13 @@ public class NovelIdeasClient {
     };
     ResponseEntity<RestPage<BookDto>> response = restTemplate.exchange(uri, HttpMethod.GET, null, restPageBookDto);
 
-    return new ResponseEntity<>(response.getBody(), response.getStatusCode());
+    return ResponseEntity.status(response.getStatusCode())
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(response.getBody());
   }
 
   public ResponseEntity<BookDto> getBook(Integer id) {
-    URI uri = UriComponentsBuilder.fromHttpUrl(baseUrl)
+    URI uri = UriComponentsBuilder.fromUriString(baseUrl)
         .path(BOOK_ID)
         .buildAndExpand(id)
         .toUri();
@@ -66,7 +69,7 @@ public class NovelIdeasClient {
   }
 
   public ResponseEntity<List<CharacterGenderDto>> getAllGenders() {
-    URI uri = UriComponentsBuilder.fromHttpUrl(baseUrl)
+    URI uri = UriComponentsBuilder.fromUriString(baseUrl)
         .path(GENDER_BASE)
         .build().toUri();
 

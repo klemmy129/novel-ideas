@@ -59,6 +59,7 @@ public class Book {
   @Enumerated(EnumType.STRING)
   private BookState state;
 
+  @Builder.Default
   @ManyToMany
   @JoinTable(name = "book_character_profile",
       joinColumns = @JoinColumn(name = "book_id"),

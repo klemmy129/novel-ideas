@@ -41,6 +41,7 @@ public class CharacterGender {
   @Column(nullable = false, unique = true)
   private String gender;
 
+  @Builder.Default
   @Column(name = "is_deleted", nullable = false)
   private boolean isDeleted = Boolean.FALSE;
 }
