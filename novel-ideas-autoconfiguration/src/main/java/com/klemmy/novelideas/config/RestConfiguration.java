@@ -1,7 +1,7 @@
 package com.klemmy.novelideas.config;
 
+import org.springframework.boot.restclient.RestTemplateBuilder;
 import org.springframework.boot.ssl.SslBundles;
-import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
@@ -11,7 +11,7 @@ public class RestConfiguration {
   private final RestTemplate restTemplate;
 
   public RestConfiguration(RestTemplateBuilder restTemplateBuilder, SslBundles sslBundles) {
-    this.restTemplate = restTemplateBuilder.setSslBundle(sslBundles.getBundle("web-server")).build();
+    this.restTemplate = restTemplateBuilder.sslBundle(sslBundles.getBundle("web-server")).build();
   }
 
   @Bean(name = "ssl")

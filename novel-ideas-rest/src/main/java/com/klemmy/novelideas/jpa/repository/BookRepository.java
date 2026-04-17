@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import static org.springframework.data.jpa.domain.Specification.unrestricted;
 import static org.springframework.data.jpa.domain.Specification.where;
 
 @Repository
@@ -28,7 +29,7 @@ public interface BookRepository extends JpaRepository<Book, Long>, JpaSpecificat
                                       final LocalDateTime endDate,
                                       final BookState state,
                                       final Pageable page) {
-    return findAll(where(FilterBookSpecification.isLikeTitle(queryTitle))
+    return findAll(FilterBookSpecification.isLikeTitle(queryTitle)
         .and(FilterBookSpecification.isBetweenDate(startDate, endDate))
         .and(FilterBookSpecification.hasState(state)), page);
   }

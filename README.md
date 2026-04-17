@@ -76,9 +76,9 @@ The frontend Demo to this application is [novel-ideas-iu](https://github.com/kle
 
 ## Technology Used
 Note: All sample paths in this project are using Linux base.
-- Java 21
+- Java 25
 - Maven
-- Spring Boot 3.3.1
+- Spring Boot 4.0.5
 - JPA/Hibernate
 - JDBC Template
 - JDBC Client
@@ -87,7 +87,7 @@ Note: All sample paths in this project are using Linux base.
   - Postgres 13
   - H2
 - ActiveMQ 6 (Artemis) (Commented out)
-- JUnit 5
+- JUnit 6
 - AssertJ
 - Spring Docs
 - Lombok
@@ -268,7 +268,7 @@ That should report:
 
 You can configure many more, but be warned, think of security.
 
-Spring Boot Actuators documentation: https://docs.spring.io/spring-boot/docs/3.0.6/reference/html/actuator.html#actuator.enabling
+Spring Boot Actuators documentation: https://docs.spring.io/spring-boot/reference/actuator/endpoints.html#actuator.endpoints.health
 
 
 ## Coding Demo Explained
@@ -289,7 +289,7 @@ Making it easier for the developer. I put a small sample [NovelIdeasClient](nove
 
 #### novel-ideas-client3
 I added novel-ideas-client3 module, but I could have just added the client class into the novel-ideas-api module.
-I have used the new (in Spring Boot 3.0+) declarative interface for Web Client, opposed to RestTemplate pattern.
+I have used the new (in Spring Boot 4.0+) declarative interface for Web Client, opposed to RestTemplate pattern.
 This uses the new annotation `@GetExchange`. There are more, but I did not use them in this demo.
 This Class would have a handful of methods that would call the rest endpoint URL, properly formatted.
 Making it easier for the developer. I put a small sample [NovelIdeasClient3](novel-ideas-client3/src/main/java/com/klemmy/novelideas/client3/NovelIdeasClient3.java).

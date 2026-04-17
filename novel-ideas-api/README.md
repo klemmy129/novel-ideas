@@ -23,7 +23,7 @@ npm install novel-ideas-api
 ```
 
 ## Technology Used to generate
-- Java 21
+- Java 25
 - Maven
 - cz.habarta.typescript-generator pluggin
-- Spring Boot 3.3.x
+- Spring Boot 4.0.x
