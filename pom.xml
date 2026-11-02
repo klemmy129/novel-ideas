@@ -29,7 +29,7 @@
         <maven.compiler.target>25</maven.compiler.target>
         <maven.compiler.proc>full</maven.compiler.proc>
         <codehaus-helper.version>3.6.1</codehaus-helper.version>  <!-- Needed for cz.habarta.typescript-generator:typescript-generator-maven-plugin -->
-        <google.guava.version>33.5.0-jre</google.guava.version>
+        <google.guava.version>33.7.1-jre</google.guava.version>
         <junit-launcher.version>6.0.3</junit-launcher.version>
         <modelmapper.version>3.2.6</modelmapper.version>
         <spring-boot.version>4.0.5</spring-boot.version>
